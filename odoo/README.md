@@ -1,6 +1,6 @@
 # Odoo — Guía de tecnología
 
-Colección introductoria sobre **Odoo** (el ERP de código abierto), organizada en nueve subcolecciones: los **fundamentos** para entender qué es y cómo está montado (incluida la estructura de datos del ORM, el recordset), las **pruebas seguras** para tocar un sistema en producción sin romperlo, el **desarrollo de búsquedas y filtros** que ve el usuario, las **maneras de configurar parámetros** para no dejar valores clavados en el código, los **mecanismos de notificación** con los que el sistema avisa a las personas, los **botones de acción** con los que una vista dispara código propio sobre un registro concreto, el **systray** con el que se añade un icono propio a la barra de navegación, el **bus de eventos de OWL** con el que dos partes de la interfaz que no se conocen se avisan de un cambio, y cómo **contribuir un fix a Odoo o a la OCA** cuando el bug no está en código propio. Está escrita para perfiles junior, sin dar por supuesta experiencia previa con Odoo ni con sistemas de gestión.
+Colección introductoria sobre **Odoo** (el ERP de código abierto), organizada en diez subcolecciones: los **fundamentos** para entender qué es y cómo está montado (incluida la estructura de datos del ORM, el recordset), las **pruebas seguras** para tocar un sistema en producción sin romperlo, el **desarrollo de búsquedas y filtros** que ve el usuario, las **maneras de configurar parámetros** para no dejar valores clavados en el código, los **mecanismos de notificación** con los que el sistema avisa a las personas, los **botones de acción** con los que una vista dispara código propio sobre un registro concreto, el **systray** con el que se añade un icono propio a la barra de navegación, el **bus de eventos de OWL** con el que dos partes de la interfaz que no se conocen se avisan de un cambio, cómo **contribuir un fix a Odoo o a la OCA** cuando el bug no está en código propio, y los **hitos de proyecto** con los que se marcan las entregas y se factura por ellas. Está escrita para perfiles junior, sin dar por supuesta experiencia previa con Odoo ni con sistemas de gestión.
 
 Cada subcolección tiene su propio índice con orden de lectura. Si empiezas de cero, recórrelas en el orden de abajo.
 
@@ -101,6 +101,15 @@ Qué hacer cuando el bug no está en código propio: cómo se propone y se acept
 |---|---|---|
 | 30 | [Contribuir un fix al núcleo de Odoo](contribucion-a-odoo-y-oca/Contribuir-un-Fix-al-Nucleo-de-Odoo.md) | El caso más estricto: el fabricante revisa cada cambio y exige firmar un acuerdo de contribución. |
 | 31 | [Contribuir un fix a un módulo de la OCA](contribucion-a-odoo-y-oca/Contribuir-un-Fix-a-un-Modulo-OCA.md) | El caso más abierto: revisión por mantenedores de la comunidad, con linters automáticos más exigentes que compensan la ausencia de un único fabricante. |
+
+### 10. [Hitos de proyecto](hitos-de-proyecto/README.md)
+
+Cómo se marcan los puntos de entrega de un proyecto y, si el pedido de venta lo pide, cómo alcanzar un hito equivale a entregar —y poder facturar— una parte del pedido.
+
+| # | Archivo | Por qué leerlo aquí |
+|---|---|---|
+| 32 | [Hitos de proyecto](hitos-de-proyecto/Hitos-de-Proyecto.md) | El concepto, la activación global y por proyecto, la herencia a subtareas y el campo que se vacía sin avisar. |
+| 33 | [Facturación por hitos](hitos-de-proyecto/Facturacion-por-Hitos.md) | La cadena producto → línea de pedido → hito, los porcentajes y los errores que dan una factura equivocada. |
 
 ---
 
