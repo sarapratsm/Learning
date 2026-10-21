@@ -25,7 +25,7 @@ Testing en .NET: xUnit, Shouldly, NSubstitute, fixtures, Testcontainers y más.
 Git, la administración de organizaciones de GitHub (permisos, equipos, rulesets, seguridad y gobierno), CI/CD, Docker, despliegue en un VPS propio (proxy inverso, HTTPS, backups, VPN), almacenamiento de objetos con Cloudflare R2, observabilidad y mensajería asíncrona.
 
 ### [Seguridad](seguridad/README.md)
-Algoritmos de hash modernos, autenticación y autorización (OAuth2, OIDC, JWT), el límite de intentos del login (por IP y por cuenta, y la IP real tras un reverse proxy), las cookies y los datos personales (consentimiento y RGPD), y el manejo de secretos: guardarlos en desarrollo y no filtrarlos al usarlos en llamadas salientes.
+Algoritmos de hash modernos, autenticación y autorización (OAuth2, OIDC, JWT), el límite de intentos del login (por IP y por cuenta, y la IP real tras un reverse proxy), las cookies y los datos personales (consentimiento y RGPD), los textos legales de una web y quién puede evaluarlos, y el manejo de secretos: guardarlos en desarrollo y no filtrarlos al usarlos en llamadas salientes.
 
 ### [Redes](redes/README.md)
 Conexiones remotas, carpetas compartidas, NAS, SSH, VPN y compañía.
