@@ -30,6 +30,12 @@ Está pensada para perfiles backend que programan a diario pero no han tenido qu
 | 6 | [Redirecciones: 301, 302 y por idioma](Redirecciones-e-idioma.md) | Cuándo es permanente y cuándo temporal, y cómo redirigir la raíz según el idioma del navegador. |
 | 7 | [Metadatos en Next.js con exportación estática](Metadatos-en-Next-js.md) | `metadataBase`, `alternates`, `sitemap.ts` y `robots.ts`, y qué no puede hacer una exportación estática. |
 
+### 4. Todo junto
+
+| # | Archivo | Por qué leerlo aquí |
+|---|---|---|
+| 8 | [Caso práctico: un sitio estático multiidioma](Caso-practico-sitio-multiidioma.md) | Monta las piezas anteriores sobre una tienda ficticia: una dirección base, una tabla de versiones por idioma, la raíz que reparte por idioma, el mapa y el `robots.txt`, con sus pruebas. |
+
 ---
 
 > Piezas relacionadas: [SEO web](../seo-web/README.md) para el panorama general (rastreo, contenido, rendimiento y Search Console), [Webs multiidioma](../webs-multiidioma/README.md) para el diseño de una web en varios idiomas y [HTTP](../de-wpf-a-web/HTTP.md) para los códigos de estado y las cabeceras.
