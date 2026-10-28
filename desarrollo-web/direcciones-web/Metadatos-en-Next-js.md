@@ -90,7 +90,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       languages: {
         es: '/es/zapatillas/',
         en: '/en/shoes/',
-        'x-default': '/en/shoes/',
+        'x-default': '/',
       },
     },
     openGraph: {
@@ -110,7 +110,7 @@ Genera, ya con las direcciones absolutas:
 <link rel="canonical" href="https://ejemplo.com/es/zapatillas/" />
 <link rel="alternate" hreflang="es" href="https://ejemplo.com/es/zapatillas/" />
 <link rel="alternate" hreflang="en" href="https://ejemplo.com/en/shoes/" />
-<link rel="alternate" hreflang="x-default" href="https://ejemplo.com/en/shoes/" />
+<link rel="alternate" hreflang="x-default" href="https://ejemplo.com/" />
 <meta property="og:image" content="https://ejemplo.com/vista-previa.png" />
 ```
 
@@ -166,7 +166,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         languages: {
           es: `${BASE}/es/zapatillas/`,
           en: `${BASE}/en/shoes/`,
-          'x-default': `${BASE}/en/shoes/`,
+          'x-default': `${BASE}/`,
         },
       },
     },
@@ -176,7 +176,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         languages: {
           es: `${BASE}/es/zapatillas/`,
           en: `${BASE}/en/shoes/`,
-          'x-default': `${BASE}/en/shoes/`,
+          'x-default': `${BASE}/`,
         },
       },
     },
@@ -234,7 +234,7 @@ Y automatizarlo con un test que lea esos ficheros: es la forma de asegurar que *
 
 ## Buenas prácticas avanzadas
 
-- **Una función `metadatosDe(...)` para todo.** Que ninguna página escriba `alternates` u `openGraph` a mano; así una regla (por ejemplo, «`x-default` es la inglesa si existe») se aplica en un único sitio.
+- **Una función `metadatosDe(...)` para todo.** Que ninguna página escriba `alternates` u `openGraph` a mano; así una regla (por ejemplo, «`x-default` es siempre la raíz del sitio») se aplica en un único sitio.
 - **El mapa y las canónicas leen de la misma tabla.** Si el mapa se escribe aparte, tarde o temprano discreparán.
 - **`metadataBase` desde una configuración, no desde una cadena en el layout.** Cambiar de dominio o de entorno es cambiar un valor.
 - **Valida la construcción en el CI.** Un test sobre `out/` (canónica, `hreflang` recíprocos, `og:image`, `sitemap.xml`, `robots.txt`) es más barato que descubrir el problema en Search Console.

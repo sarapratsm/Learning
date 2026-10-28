@@ -64,13 +64,13 @@ Dos consecuencias prácticas:
     <loc>https://ejemplo.com/es/zapatillas/</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://ejemplo.com/es/zapatillas/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://ejemplo.com/en/shoes/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ejemplo.com/en/shoes/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ejemplo.com/"/>
   </url>
   <url>
     <loc>https://ejemplo.com/en/shoes/</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://ejemplo.com/es/zapatillas/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://ejemplo.com/en/shoes/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ejemplo.com/en/shoes/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ejemplo.com/"/>
   </url>
 </urlset>
 ```

@@ -48,7 +48,7 @@ Quien entra por `https://ejemplo.com/` no ha elegido idioma. Una web multiidioma
 2. **Solo en la raíz.** Si alguien entra por `/es/zapatillas/`, ya ha elegido: no lo muevas. La cabecera `Accept-Language` es una **pista**, y quien ha escrito o pulsado una dirección concreta manda sobre ella.
 3. **Sin IP ni cookie.** La IP dice dónde está una persona, no qué idioma lee (un turista, una VPN), y una cookie añade un consentimiento que no necesitas. El idioma del navegador basta.
 4. **Con un selector de idioma visible** en cada página, para quien quiera otro.
-5. **La raíz sigue siendo una página real para los robots**, con enlaces a cada idioma y declarada como `x-default` (ver [Canónica y hreflang](Canonica-y-hreflang.md)): los buscadores no declaran su idioma de forma fiable.
+5. **La raíz sigue siendo una página real para los robots**, con enlaces a cada idioma y declarada como `x-default` de todas las páginas (ver [Canónica y hreflang](Canonica-y-hreflang.md)): los buscadores no declaran su idioma de forma fiable.
 
 ### `Accept-Language` y `navigator.languages`
 

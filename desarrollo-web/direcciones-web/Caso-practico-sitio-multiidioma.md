@@ -126,10 +126,13 @@ Conviene un test que garantice que ninguna página real se llame `inicio`; de lo
 import { rutaDe } from './urls'
 import type { Idioma, Tabla } from '@/content/direcciones'
 
+// x-default es la raíz de la web: la página de entrada que elige el idioma según el navegador.
+export const RUTA_RAIZ = '/'
+
 export interface Versiones {
   canonica: string
   idiomas: Partial<Record<Idioma, string>>
-  porDefecto?: string
+  porDefecto: string
 }
 
 export function versionesDe(tabla: Tabla, idioma: Idioma, clave: string): Versiones {
@@ -139,7 +142,7 @@ export function versionesDe(tabla: Tabla, idioma: Idioma, clave: string): Versio
   }
   const canonica = idiomas[idioma]
   if (canonica === undefined) throw new Error(`«${clave}» no existe en «${idioma}»`)
-  return { canonica, idiomas, porDefecto: idiomas.en }
+  return { canonica, idiomas, porDefecto: RUTA_RAIZ }
 }
 ```
 
@@ -153,7 +156,7 @@ versionesDe(conInicio(direcciones, IDIOMAS), 'es', 'producto/trail-runner')
 //     es: '/es/zapatillas/trail-runner/',
 //     en: '/en/shoes/trail-runner/',
 //   },
-//   porDefecto: '/en/shoes/trail-runner/',
+//   porDefecto: '/',
 // }
 ```
 
@@ -161,10 +164,10 @@ No aparece `fr`: no hay un `if` especial para «lo que falta». Simplemente no e
 
 ### Reglas que salen gratis
 
-- **Solo se declara lo que existe.** La página del producto no menciona el francés. Si faltara también el inglés, `porDefecto` sería `undefined` y no se declararía `x-default`.
+- **Solo se declara lo que existe.** La página del producto no menciona el francés. Si faltara también el inglés, tampoco se declararía la versión `en`, pero `x-default` seguiría ahí.
 - **Reciprocidad.** La versión `es` declara la `en` y la `en` declara la `es`, porque las dos leen la misma tabla y llaman a la misma función.
 - **La canónica es siempre la propia.** La versión `es` no apunta a la `en` como «la buena»: cada versión es la preferida de sí misma.
-- **`x-default` es la versión que se muestra a quien no encaja en ningún idioma.** Aquí se elige la inglesa si existe. Si el criterio cambiara, se cambia en esta función y se aplica en todas partes.
+- **`x-default` es la página que se muestra a quien no encaja en ningún idioma, y aquí es la raíz.** La raíz `/` es una página que elige idioma según el navegador, justo el tipo de página para el que se diseñó la etiqueta (ver [Canónica y `hreflang`](Canonica-y-hreflang.md)). Es la misma en todas las páginas, exista o no la versión inglesa. Si el criterio cambiara, se cambia en esta función y se aplica en todas partes.
 
 ### De `versionesDe` a las etiquetas
 
@@ -185,7 +188,7 @@ export function metadatosDe({ idioma, clave, titulo, descripcion }: Datos): Meta
     description: descripcion,
     alternates: {
       canonical: v.canonica,
-      languages: { ...v.idiomas, ...(v.porDefecto && { 'x-default': v.porDefecto }) },
+      languages: { ...v.idiomas, 'x-default': v.porDefecto },
     },
     openGraph: { title: titulo, description: descripcion, url: v.canonica, type: 'website' },
   }
@@ -213,10 +216,10 @@ Con `metadataBase` activo, el HTML de `/es/zapatillas/trail-runner/` incluye:
 <link rel="canonical" href="https://tienda.example/es/zapatillas/trail-runner/">
 <link rel="alternate" hreflang="es" href="https://tienda.example/es/zapatillas/trail-runner/">
 <link rel="alternate" hreflang="en" href="https://tienda.example/en/shoes/trail-runner/">
-<link rel="alternate" hreflang="x-default" href="https://tienda.example/en/shoes/trail-runner/">
+<link rel="alternate" hreflang="x-default" href="https://tienda.example/">
 ```
 
-Sin `fr`, porque el producto no existe en francés. Los detalles de cada etiqueta están en [Canónica y `hreflang`](Canonica-y-hreflang.md) y la API de Next.js en [Metadatos en Next.js](Metadatos-en-Next-js.md).
+Sin `fr`, porque el producto no existe en francés, y con `x-default` hacia la raíz. Los detalles de cada etiqueta están en [Canónica y `hreflang`](Canonica-y-hreflang.md) y la API de Next.js en [Metadatos en Next.js](Metadatos-en-Next-js.md).
 
 Una advertencia sobre las direcciones con parámetros, como `/es/zapatillas/?talla=42`: con exportación estática el HTML es el mismo con y sin parámetros, y los parámetros no llegan a `generateMetadata`. La canónica del listado es, por tanto, siempre la del listado sin parámetros, sin ninguna lógica adicional.
 
@@ -248,8 +251,10 @@ describe('versionesDe', () => {
     expect(desdeEn).toEqual(desdeEs)
   })
 
-  it('sin versión en inglés no hay x-default', () => {
-    expect(versionesDe(tabla, 'es', 'producto/solo-es').porDefecto).toBeUndefined()
+  it('sin versión en inglés se declara igualmente la raíz como x-default', () => {
+    const v = versionesDe(tabla, 'es', 'producto/solo-es')
+    expect(v.idiomas.en).toBeUndefined()
+    expect(v.porDefecto).toBe('/')
   })
 
   it('pedir una clave que no existe en ese idioma es un error', () => {
@@ -292,7 +297,7 @@ Quien entra por `https://tienda.example/` no está en ningún idioma. Hace falta
 
 Qué hace cada parte:
 
-- **Metadatos:** la raíz se declara a sí misma como `x-default`. Sin `noindex` ni `<meta http-equiv="refresh">`: debe poder indexarse como puerta de entrada.
+- **Metadatos:** la raíz declara las versiones por idioma y se declara a sí misma como `x-default`. Como todas las páginas apuntan de vuelta a ella con ese mismo `x-default` (paso 2), el conjunto es recíproco y los buscadores lo tienen en cuenta. Sin `noindex` ni `<meta http-equiv="refresh">`: debe poder indexarse como puerta de entrada.
 - **Enlaces visibles:** si el script no se ejecuta (un robot, JavaScript desactivado), la persona o el robot ve tres enlaces normales.
 - **Script:** `navigator.languages` es la lista de idiomas preferidos, por ejemplo `['de-DE', 'fr-FR']`. Se queda con el código base (`de`, `fr`), toma el primero soportado (`fr`) y, si ninguno lo está o la lista está vacía o no existe, usa `en`. `location.replace` evita que la raíz quede en el historial.
 
@@ -389,7 +394,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         alternates: {
           languages: {
             ...Object.fromEntries(Object.entries(v.idiomas).map(([l, r]) => [l, urlAbsoluta(r)])),
-            ...(v.porDefecto && { 'x-default': urlAbsoluta(v.porDefecto) }),
+            'x-default': urlAbsoluta(v.porDefecto),
           },
         },
       }
@@ -407,11 +412,11 @@ Aquí sí hay que escribir **direcciones absolutas**: `metadataBase` no se aplic
   <loc>https://tienda.example/es/zapatillas/trail-runner/</loc>
   <xhtml:link rel="alternate" hreflang="es" href="https://tienda.example/es/zapatillas/trail-runner/" />
   <xhtml:link rel="alternate" hreflang="en" href="https://tienda.example/en/shoes/trail-runner/" />
-  <xhtml:link rel="alternate" hreflang="x-default" href="https://tienda.example/en/shoes/trail-runner/" />
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://tienda.example/" />
 </url>
 ```
 
-Cada versión es su propia entrada `<url>`, y todas llevan la misma lista de alternativas, igual que las etiquetas de sus páginas. Como ambas salen de `versionesDe`, **no pueden discrepar**.
+Cada versión es su propia entrada `<url>`, y todas llevan la misma lista de alternativas, con el `x-default` hacia la raíz, igual que las etiquetas de sus páginas. Que la raíz aparezca como alternativa no la convierte en una entrada del mapa (véase la tabla siguiente). Como ambas salen de `versionesDe`, **no pueden discrepar**.
 
 ### Qué entra y qué no, sin lista de exclusiones
 
@@ -476,9 +481,11 @@ describe('sitemap', () => {
     expect(urls.some((u) => u.startsWith('https://tienda.example/fr/contact/'))).toBe(true)
   })
 
-  it('cada entrada declara sus alternativas con x-default', () => {
+  it('cada entrada declara sus alternativas con x-default hacia la raíz', () => {
     const producto = entradas.find((e) => e.url.endsWith('/es/zapatillas/trail-runner/'))
-    expect(Object.keys(producto?.alternates?.languages ?? {}).sort()).toEqual(['en', 'es', 'x-default'])
+    const languages = producto?.alternates?.languages ?? {}
+    expect(Object.keys(languages).sort()).toEqual(['en', 'es', 'x-default'])
+    expect(languages['x-default']).toBe('https://tienda.example/')
   })
 })
 
@@ -511,7 +518,8 @@ grep -o '<link rel="canonical"[^>]*>' out/es/zapatillas/trail-runner/index.html
 
 ## Buenas prácticas avanzadas
 
-- **Haz que lo imposible sea imposible, no que esté prohibido.** Una incoherencia entre etiquetas y mapa no debe evitarse con una revisión: debe ser irrepresentable porque ambos leen de la misma función. Cada vez que añadas una regla («`x-default` es la inglesa»), pregúntate si vive en un solo sitio.
+- **Haz que lo imposible sea imposible, no que esté prohibido.** Una incoherencia entre etiquetas y mapa no debe evitarse con una revisión: debe ser irrepresentable porque ambos leen de la misma función. Cada vez que añadas una regla («`x-default` es siempre la raíz»), pregúntate si vive en un solo sitio.
+- **Que las etiquetas de la raíz no queden sin respuesta.** Una raíz que declara los idiomas sin que las portadas apunten de vuelta a ella tiene etiquetas que los buscadores ignoran. Con `x-default` hacia la raíz en todas las páginas, la ida y la vuelta existen, y un test que compruebe la reciprocidad lo vigila.
 - **Una clave que significa «el mismo contenido» en todos los idiomas.** La tabla funciona porque `producto/trail-runner` es estable aunque su dirección cambie; si usas la dirección como identidad, un cambio de título rompe la reciprocidad.
 - **Cubre los casos raros con tablas inventadas, no con contenido real.** El contenido real casi siempre está completo; los casos de «falta el inglés» solo se ejercitan con datos de prueba.
 - **Vigila lo que está duplicado a mano.** La raíz estática no puede leer la configuración; un test que compare su contenido con la fuente evita que se desincronice en silencio.
