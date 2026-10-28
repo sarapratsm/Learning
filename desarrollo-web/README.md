@@ -32,3 +32,6 @@ Buenas prácticas para ofrecer una web en varios idiomas: el idioma en la URL, `
 
 ### [SEO web](seo-web/README.md)
 Cómo hacer que un buscador encuentre y entienda las páginas de una web: rastreo e indexación (códigos de estado, `robots.txt`, `noindex`, sitemap, contenido en el HTML), títulos y URLs, datos estructurados con JSON-LD, Core Web Vitals y diagnóstico con Search Console.
+
+### [Direcciones web y SEO técnico](direcciones-web/README.md)
+Lo que una web declara sobre sus propias direcciones: la dirección base, absolutas y relativas, la barra final, la dirección canónica, `hreflang` y `x-default`, `robots.txt` y el sitemap, la vista previa al compartir (Open Graph), los datos estructurados con JSON-LD, las redirecciones 301 y 302 (incluida la de idioma) y cómo se genera todo con la API de metadatos de Next.js en una exportación estática.
