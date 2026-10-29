@@ -7,34 +7,82 @@ Colección personal de guías de tecnología en español, organizadas por catego
 ## Categorías
 
 ### [Arquitectura de software](arquitectura-de-software/README.md)
-Clean Architecture, patrones de diseño y Domain-Driven Design, multi-tenancy, los distintos tipos de APIs y cómo escribir y mantener su contrato.
+- Clean Architecture
+- Patrones de diseño
+- Domain-Driven Design
+- Multi-tenancy
+- Tipos de APIs y diseño y mantenimiento de contratos
 
 ### [Desarrollo web](desarrollo-web/README.md)
-ASP.NET Core desde cero (qué añade sobre .NET Core, sus atributos, sus modelos de programación web y su despliegue), la transición desde C# WPF a la web, el stack frontend React + Vite + TypeScript, la accesibilidad web con WCAG, las buenas prácticas en webs multiidioma, el SEO técnico, las direcciones web (canónica, `hreflang`, `robots.txt`, sitemap, Open Graph, JSON-LD y redirecciones), el efecto parallax con CSS (historia y técnicas) y cómo integrar un manual de usuario dentro de una app React.
+- ASP.NET Core desde cero (novedades sobre .NET Core, atributos, modelos de programación web y despliegue)
+- Transición desde C# WPF a la web
+- Stack frontend con React, Vite y TypeScript
+- Accesibilidad web con WCAG
+- Buenas prácticas en webs multiidioma
+- SEO técnico
+- Direcciones web y metadatos (canónica, hreflang, robots.txt, sitemap, Open Graph, JSON-LD y redirecciones)
+- Efecto parallax con CSS (historia y técnicas)
+- Integración de un manual de usuario dentro de una app React
 
 ### [Lenguajes y runtimes](lenguajes/README.md)
-Fundamentos de C# y .NET (lenguaje, runtime, MSBuild y NuGet) y características del lenguaje como los atributos.
+- Fundamentos de C# y .NET (lenguaje, runtime, MSBuild y NuGet)
+- Características avanzadas del lenguaje (atributos y metaprogramación)
 
 ### [Bases de datos](bases-de-datos/README.md)
-PostgreSQL, acceso a datos en .NET, caching con Redis, migraciones de esquema y bases de datos documentales (MongoDB).
+- PostgreSQL
+- Acceso a datos en .NET
+- Caching con Redis
+- Migraciones de esquema
+- Bases de datos documentales (MongoDB)
 
 ### [Testing](testing/README.md)
-Testing en .NET: xUnit, Shouldly, NSubstitute, fixtures, Testcontainers y más.
+- Testing en .NET (xUnit, Shouldly, NSubstitute)
+- Fixtures y configuración de pruebas
+- Testcontainers y pruebas de integración
 
 ### [DevOps y control de versiones](devops/README.md)
-Git, la administración de organizaciones de GitHub (permisos, equipos, rulesets, seguridad y gobierno), CI/CD, Docker, despliegue en un VPS propio (proxy inverso, HTTPS, backups, VPN), almacenamiento de objetos con Cloudflare R2, observabilidad y mensajería asíncrona.
+- Git
+- Administración de organizaciones de GitHub (permisos, equipos, rulesets, seguridad y gobierno)
+- CI/CD
+- Docker
+- Despliegue en un VPS propio (proxy inverso, HTTPS, backups, VPN)
+- Almacenamiento de objetos con Cloudflare R2
+- Observabilidad
+- Mensajería asíncrona
 
 ### [Seguridad](seguridad/README.md)
-Algoritmos de hash modernos, autenticación y autorización (OAuth2, OIDC, JWT), el límite de intentos del login (por IP y por cuenta, y la IP real tras un reverse proxy), las cookies y los datos personales (consentimiento y RGPD), los textos legales de una web y quién puede evaluarlos, y el manejo de secretos: guardarlos en desarrollo y no filtrarlos al usarlos en llamadas salientes.
+- Algoritmos de hash modernos
+- Autenticación y autorización (OAuth2, OIDC, JWT)
+- Límite de intentos de login (por IP y por cuenta, y resolución de IP real tras reverse proxy)
+- Cookies y datos personales (consentimiento y RGPD)
+- Textos legales web y marco de evaluación
+- Manejo seguro de secretos (almacenamiento en desarrollo y prevención de fugas en llamadas salientes)
 
 ### [Redes](redes/README.md)
-Conexiones remotas, carpetas compartidas, NAS, SSH, VPN y compañía.
+- Conexiones remotas
+- Carpetas compartidas y almacenamiento en red (NAS)
+- SSH
+- VPN y túneles seguros
 
 ### [Odoo](odoo/README.md)
-El ERP de código abierto, en diez bloques: los fundamentos para entenderlo, cómo hacer pruebas de forma segura sobre un Odoo en producción, cómo se construyen las búsquedas y los filtros (dominios, *search panel*, filtros dinámicos), las distintas maneras de configurar parámetros (odoo.conf, parámetros del sistema, ajustes, IDs externos), los mecanismos de notificación (avisos flotantes, excepciones, chatter y seguidores, plantillas de correo, actividades), los botones de acción (`type="object"`) con los que una vista dispara código propio sobre un registro, herencia de vistas con `xpath` incluida, el systray con el que se añade un icono propio a la barra de navegación, el bus de eventos de OWL (`env.bus`) para sincronizar partes de la interfaz que no se conocen entre sí, cómo contribuir un fix al núcleo de Odoo o a un módulo de la OCA cuando el bug no está en código propio, y los hitos de proyecto con los que se marcan las entregas y se factura por ellas.
+- Fundamentos de arquitectura del ERP
+- Entornos de prueba seguros sobre bases de datos en producción
+- Búsquedas y filtros avanzados (dominios, search panel, filtros dinámicos)
+- Gestión de parámetros de configuración (odoo.conf, parámetros del sistema, ajustes, IDs externos)
+- Mecanismos de notificación (avisos flotantes, excepciones, chatter, seguidores, plantillas de correo, actividades)
+- Botones de acción (type="object") y ejecución de lógica desde vistas
+- Herencia de vistas con xpath
+- Integración en el systray (iconos personalizados en la barra superior)
+- Bus de eventos de OWL (env.bus) para reactividad e intercomunicación de componentes
+- Flujo de contribución de fixes al núcleo de Odoo y módulos de OCA
+- Hitos de proyecto, entregables y facturación
 
 ### [Herramientas y sistemas](herramientas/README.md)
-Correo transaccional.
+- Correo transaccional
 
 ### [IA](ia/README.md)
-Texto: ingeniería con LLMs (programar con agentes de codificación, distribuir sus extensiones con plugins y marketplaces, y construir software con modelos: API, tool use, agentes, MCP, evaluaciones, coste y seguridad) y context engineering, cómo diseñar y gestionar todo lo que recibe un modelo en cada llamada. Imagen: modelos de difusión y control estructural con ControlNet (preprocesadores, peso y ventana de control, multi-ControlNet).
+- Ingeniería con LLMs (desarrollo asistido con agentes de código, plugins y marketplaces)
+- Construcción de software con modelos (APIs, tool use, sistemas multiagente, MCP, evaluaciones, costes y seguridad)
+- Context engineering (diseño, optimización y gestión del contexto en prompts)
+- Modelos de difusión para generación de imagen
+- Control estructural con ControlNet (preprocesadores, pesos, ventanas de control y multi-ControlNet)
