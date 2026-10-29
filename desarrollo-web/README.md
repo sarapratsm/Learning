@@ -15,6 +15,9 @@ Traduce lo que ya sabes de WPF (XAML, MVVM, binding) al modelo de ASP.NET Core: 
 ### [React y su ecosistema](frontend-react/README.md)
 Stack React + Vite + TypeScript, con analogías al mundo C#/.NET: componentes, estilos con Tailwind, estado y datos, calidad de código y testing con Vitest.
 
+### [CSS Parallax](css-parallax/README.md)
+El efecto de profundidad al hacer scroll, con su contexto e historia (de la astronomía y la cámara multiplano a los videojuegos y la web) y las tres técnicas de CSS: `background-attachment: fixed`, `perspective` con `translateZ` y animaciones dirigidas por scroll, con su accesibilidad (`prefers-reduced-motion`) y rendimiento.
+
 ### [Manual de usuario dentro de una app web](manual-de-usuario-en-la-app/README.md)
 Cómo integrar el manual de usuario en una app React: Markdown convertido a HTML en build-time, `dangerouslySetInnerHTML` y XSS, i18n con claves, índice con scroll-spy, modal con zoom y arrastre, capturas automáticas con Playwright y exportación a Word con `python-docx`.
 
