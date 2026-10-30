@@ -1,14 +1,14 @@
 # CI/CD — Guía de tecnologías
 
-Documentación introductoria sobre **CI/CD** (Integración y Despliegue Continuo): qué es, cómo se describe un pipeline y qué herramientas y técnicas se usan para llevar código a producción de forma automática y segura.
+Guía de **CI/CD** (integración y despliegue continuos): qué problema resuelve, cómo se describe un pipeline, qué plataformas lo ejecutan y qué técnicas aparecen al montar el de un proyecto real. Todos los ejemplos comparten escenario: una tienda online con los servicios `pedidos`, `pagos`, `inventario` y `emails`, desplegada en un VPS.
 
-Está escrita para perfiles junior con nociones básicas de programación y de Git, pero sin experiencia previa en automatización ni despliegues. Cada ficha explica qué es la tecnología o el concepto, por qué existe, cuándo se usa y lo mínimo que necesitas saber para no perderte.
+Cada ficha parte de una introducción accesible y desarrolla el tema con ejemplos de código guiados, tablas de decisión y errores frecuentes. Requiere nociones de programación y de Git, pero no experiencia previa en automatización.
 
 ---
 
 ## Orden de lectura recomendado
 
-Sigue este orden si partes de cero. Está pensado para que cada concepto apoye al siguiente.
+Cada concepto se apoya en el anterior.
 
 ### 1. Conceptos fundamentales
 
@@ -49,6 +49,20 @@ Patrones concretos que aparecen al montar el CI/CD de un proyecto de verdad. Req
 | 10 | [Monorepo y path-filters](Monorepo-y-Path-Filters.md) | Cómo evitar que un repo con varias áreas lo recompile todo en cada cambio. |
 | 11 | [Entornos efímeros en CI](Entornos-Efimeros-en-CI.md) | Probar la aplicación completa sin mantener un servidor de pruebas permanente. |
 | 12 | [Release por tag](Release-por-Tag.md) | Separar "integrar código" de "publicar producto": el deploy como decisión explícita. |
+
+---
+
+## Qué ficha consultar según la duda
+
+| Duda | Ficha |
+|---|---|
+| ¿Qué diferencia hay entre integración, entrega y despliegue continuos? | [CI/CD](CI-CD.md) |
+| ¿Cómo se estructura un pipeline en etapas y trabajos? | [Pipeline](Pipeline.md) |
+| ¿Cómo monto mi primer workflow en GitHub? | [GitHub Actions](GitHub-Actions.md) |
+| ¿Cómo guardo una contraseña o un token sin subirlo al repo? | [Secrets y variables](Secrets-y-Variables.md) |
+| ¿Cómo publico una versión sin cortar el servicio? | [Estrategias de despliegue](Estrategias-de-Despliegue.md) |
+| ¿Por qué mi workflow no arranca al tocar un solo servicio? | [Monorepo y path-filters](Monorepo-y-Path-Filters.md) |
+| ¿Cómo publico una versión solo cuando yo lo decida? | [Release por tag](Release-por-Tag.md) |
 
 ---
 
