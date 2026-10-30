@@ -39,6 +39,7 @@ Colección personal de guías de tecnología en español, organizadas por catego
 - Testing en .NET (xUnit, Shouldly, NSubstitute)
 - Fixtures y configuración de pruebas
 - Testcontainers y pruebas de integración
+- Metodologías guiadas por pruebas y especificaciones (TDD, BDD y SDD)
 
 ### [DevOps y control de versiones](devops/README.md)
 - Git
