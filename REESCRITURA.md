@@ -4,7 +4,7 @@ Documento de trabajo: plan, checklist y estado de la conversión de todas las co
 
 No es una ficha de tutorial. Vive en la raíz porque tiene que estar versionado y ser fácil de encontrar entre sesiones. Cuando la conversión termine, este fichero se puede borrar.
 
-**Última actualización:** 14 de septiembre de 2026.
+**Última actualización:** 30 de octubre de 2026.
 
 ---
 
@@ -162,15 +162,16 @@ Lo que funciona, aprendido en la primera tanda:
 - **La extensión se va por encima del rango indicado, y suele estar justificada.** En la segunda tanda se pidieron 250-350 líneas y salieron entre 327 y 519, sin relleno: cuando el brief lista 14-16 bloques de contenido y cada uno pide su snippet o su tabla, la aritmética no da para menos. Dos consecuencias prácticas: **el rango del brief funciona como orientación, no como límite**, y si de verdad quieres una ficha corta hay que recortar la lista de contenido, no repetir el número. No pidas a un agente que recorte al final: es justo donde murieron los de la primera tanda.
 - **Avisar al agente de que verá cambios ajenos en `git status`.** Con varios agentes en paralelo, cada uno ve los ficheros de los demás como modificados y lo reporta como anomalía. No es un problema, pero ensucia el informe final.
 - **Pedirle que escriba pronto y refine con ediciones, no que vuelque el documento al final.** El 28/07/2026 un agente murió con `Connection closed mid-response` justo después de leer las referencias y antes de escribir una sola línea: se perdió todo su trabajo. Los que escriben temprano y van editando sobreviven a un fallo tardío con un documento aprovechable. Ante un agente caído, lo primero es mirar el fichero: si sigue en su versión original, se relanza sin más.
+- **Dar a cada agente su propia carpeta de trabajo en el scratchpad.** El 30/10/2026, dos agentes de la tanda de `devops/git` usaron `scratchpad/lab/tienda` para sus repositorios de prueba: uno ejecutó `rm -rf lab` y borró el del otro, y un tercero lanzó `git rebase` sobre un repositorio ajeno (sin efecto, el hash no cambió). Solo se perdieron repositorios de prueba, pero el brief debe indicar un directorio distinto por agente (por ejemplo `scratchpad/<ficha>/`).
 - **Se puede parar una tanda a mitad sin dejar destrozos.** Al cerrar la sesión del 28/07/2026 se detuvieron cuatro agentes en marcha: tres estaban leyendo o preparando y no habían tocado nada, y el cuarto había terminado un documento válido y solo le quedaba una pasada de recorte. Ninguna ficha quedó a medio escribir. Aun así, tras parar conviene comprobar la estructura de cada fichero afectado antes de comitear.
 
 ---
 
 ## 7. Estado
 
-**Convertidas: 77 fichas en 16 colecciones. Pendientes: 186 fichas en 18 colecciones.**
+**Convertidas: 111 fichas en 19 colecciones. Pendientes: 148 fichas en 15 colecciones.**
 
-Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, más las 10 de `autenticacion-y-autorizacion` (ya completa). El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
+Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, las 10 de `autenticacion-y-autorizacion` (ya completa), las 12 de `devops/ci-cd` y las 19 de `devops/git`. El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
 
 ### `seguridad/autenticacion-y-autorizacion`: completa (14/09/2026)
 
@@ -196,6 +197,9 @@ Las cuatro fichas que quedaban (`JWT-Refresh.md`, `JWT-Refresh-vs-Tokens-Opacos.
 | `seguridad/autenticacion-y-autorizacion` | 10 | Cerrada el 14/09/2026. Detalle arriba, en «completa (14/09/2026)». |
 | `herramientas/correo-transaccional` | 1 | Cerrada el 14/09/2026. El contenido ya era bueno (una sola ficha, sin banner): se reorganizó "Lo mínimo que necesitas saber" en secciones `##` propias, se plegó "Lo que NO hace" en la prosa y se añadió `Documentación oficial` ([MailKit](https://mimekit.net/docs/html/T_MailKit_Net_Smtp_SmtpClient.htm), [dmarc.org](https://dmarc.org/overview/)) y `Recursos didácticos` ([mail-tester.com](https://www.mail-tester.com/)). 154 → 144 líneas: la reorganización no necesitó añadir contenido nuevo. |
 | `testing/e2e` | 1 | Cerrada el 14/09/2026. Mismo tratamiento que `correo-transaccional`: reorganización, no expansión (178 → 174 líneas). Se detectó y quitó un enlace roto que ya traía la ficha antigua, `try.playwright.dev` (el dominio ya no resuelve, `NXDOMAIN`); no se sustituyó por otro porque no había una URL verificada a mano para reemplazarlo. Añadida `Documentación oficial` (docs de Playwright y su página de Best Practices). |
+| `devops/ci-cd` | 12 | Cerrada el 30/10/2026. Reescritura completa de las 12 fichas (118-418 líneas) con el ejemplo conductor de `devops/`; las tres plataformas (`GitHub-Actions`, `GitLab-CI`, `Jenkins`) comparten un pipeline equivalente y una tabla de equivalencia de vocabulario. En `Release-por-Tag.md` se sustituyó el rollback con `git push --force-with-lease` (no despliega nada) por `workflow_dispatch` con el tag a desplegar. |
+| `devops/git` | 19 | Cerrada el 30/10/2026. Las salidas de comandos se capturaron con Git 2.54 en repositorios temporales. `GitHub-Actions.md` queda como introducción breve del vínculo Git↔Actions y remite a la ficha de `ci-cd`. `Tokens-de-Acceso-en-Remotos.md` pasó de 41 a 172 líneas y ya no recomienda incrustar el token en la URL. |
+| `testing/tdd-bdd-sdd` | 3 | Creada el 30/10/2026 directamente en formato nuevo (no es una conversión): `TDD.md`, `BDD.md` y `SDD.md` (544-721 líneas), con el ejemplo conductor del cupón de descuento en C#/.NET. `SDD.md` remite a `ia/ingenieria-con-llms/Desarrollo-Dirigido-por-Especificacion.md` para el flujo con agentes. |
 
 ### Pendiente
 
@@ -203,23 +207,21 @@ Orden propuesto: por valor de uso y por dependencias entre colecciones. Las pequ
 
 | # | Colección | Fichas | Avisos |
 |---:|---|---:|---|
-| 1 | `devops/ci-cd` | 12 | Enlazada desde `docker` y `despliegue-en-vps`. |
-| 2 | `devops/git` | 20 | |
-| 3 | `arquitectura-de-software/clean-architecture` | 9 | |
-| 4 | `arquitectura-de-software/patrones-de-diseno` | 11 | 9 ficheros con banner 🧭. Carpeta renombrada de `patrones-de-diseño` el 27/07/2026. |
-| 5 | `arquitectura-de-software/tipos-de-apis` | 13 | |
-| 6 | `arquitectura-de-software/multi-tenancy` | 7 | |
-| 7 | `lenguajes/csharp-dotnet` (+ 2 subcarpetas) | 8 | Tiene subcarpetas con README propio. |
-| 8 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
-| 9 | `desarrollo-web/asp-net-core` | 9 | |
-| 10 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
-| 11 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
-| 12 | `redes/redes-y-acceso-remoto` | 11 | `SSH.md` y `VPN.md` se cruzan con `despliegue-en-vps`, ya convertida. |
-| 13 | `odoo/fundamentos` | 4 | |
-| 14 | `odoo/busqueda-y-filtros` | 4 | |
-| 15 | `odoo/pruebas-seguras` | 5 | |
-| 16 | `odoo/configuracion-parametros` | 6 | |
-| 17 | `ia/context-engineering` | 9 | Revisar solapamiento con `ia/ingenieria-con-llms`, ya en formato nuevo. |
+| 1 | `arquitectura-de-software/clean-architecture` | 9 | |
+| 2 | `arquitectura-de-software/patrones-de-diseno` | 11 | 9 ficheros con banner 🧭. Carpeta renombrada de `patrones-de-diseño` el 27/07/2026. |
+| 3 | `arquitectura-de-software/tipos-de-apis` | 13 | |
+| 4 | `arquitectura-de-software/multi-tenancy` | 7 | |
+| 5 | `lenguajes/csharp-dotnet` (+ 2 subcarpetas) | 8 | Tiene subcarpetas con README propio. |
+| 6 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
+| 7 | `desarrollo-web/asp-net-core` | 9 | |
+| 8 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
+| 9 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
+| 10 | `redes/redes-y-acceso-remoto` | 11 | `SSH.md` y `VPN.md` se cruzan con `despliegue-en-vps`, ya convertida. |
+| 11 | `odoo/fundamentos` | 4 | |
+| 12 | `odoo/busqueda-y-filtros` | 4 | |
+| 13 | `odoo/pruebas-seguras` | 5 | |
+| 14 | `odoo/configuracion-parametros` | 6 | |
+| 15 | `ia/context-engineering` | 9 | Revisar solapamiento con `ia/ingenieria-con-llms`, ya en formato nuevo. |
 
 > `odoo/notificaciones` no está en esta lista: se creó directamente en formato nuevo (no es una conversión), y está incompleta a propósito — le faltan 3 fichas propias, detalladas en su README.
 
@@ -227,7 +229,7 @@ Orden propuesto: por valor de uso y por dependencias entre colecciones. Las pequ
 
 ## 8. Asuntos abiertos
 
-- **`ia/ingenieria-con-llms/`: resuelto.** Tiene README-índice, está enlazada desde `ia/README.md` y la descripción de la categoría IA en el README raíz ya la incluye. Queda revisar si se solapa con `ia/context-engineering` (sigue en la tabla de pendientes, punto 18).
+- **`ia/ingenieria-con-llms/`: resuelto.** Tiene README-índice, está enlazada desde `ia/README.md` y la descripción de la categoría IA en el README raíz ya la incluye. Queda revisar si se solapa con `ia/context-engineering` (sigue en la tabla de pendientes, último punto).
 - **Referencias de tono en la skill: resueltas** el 28/07/2026. `SKILL.md` cita ahora `devops/despliegue-en-vps/UFW.md` (tono), `bases-de-datos/acceso-a-datos-dotnet/Dapper.md` (guía completa con tablas de decisión y errores frecuentes) y `devops/despliegue-en-vps/README.md` (modelo de índice), las tres en formato nuevo. La nota de «calibra el tono, no la extensión» se sustituyó por un aviso de que en el repositorio aún queda contenido en formato antiguo y no sirve como referencia de profundidad. Ese aviso se puede borrar cuando la conversión termine.
 - **Fin de línea.** El repositorio convierte LF a CRLF al indexar, así que tras comitear los ficheros pueden reaparecer como modificados. Es ruido, no un cambio real: se confirma con `git diff --ignore-all-space`.
 - **Al terminar la conversión**, revisar el README raíz: ya no describe la colección como «guías introductorias», pero conviene una lectura final de coherencia.
