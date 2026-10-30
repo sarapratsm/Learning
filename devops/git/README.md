@@ -1,8 +1,8 @@
 # Git — Guía práctica
 
-Tutorial introductorio de **Git**, el sistema de control de versiones más usado del mundo. Pensado para perfiles junior: cada ficha explica qué es una pieza de Git, por qué existe, cuándo se usa y lo mínimo que necesitas saber, con ejemplos genéricos que se entienden sin conocer ningún proyecto concreto.
+Guía de **Git**, el sistema de control de versiones más usado: el modelo mental, el flujo diario, las ramas, los remotos, cómo deshacer errores y las técnicas para ordenar el historial. Las fichas parten de una introducción accesible y desarrollan cada comando con ejemplos guiados y la salida real de Git. Todas comparten escenario: el repositorio `tienda` de una tienda online con los servicios `pedidos`, `pagos`, `inventario` y `emails`.
 
-Empieza por los fundamentos y avanza en orden: cada bloque se apoya en el anterior. Los dos últimos bloques son más avanzados; puedes dejarlos para cuando domines el flujo básico.
+Los bloques van de menos a más: cada uno se apoya en el anterior, y los dos últimos exigen dominar el flujo básico.
 
 ---
 
@@ -121,6 +121,22 @@ Cómo se usa Git en equipo y cómo se automatizan las comprobaciones.
 - [GitHub Actions](GitHub-Actions.md)
 
 </details>
+
+---
+
+## Qué ficha consultar según el problema
+
+| Situación | Ficha |
+|---|---|
+| He guardado algo que no quería | [Deshacer cambios](Deshacer-cambios.md) |
+| `git push` rechazado porque el remoto tiene commits que no tengo | [Remotos](Remotos.md) |
+| Aparecen `<<<<<<<` en un fichero tras fusionar | [Fusión y conflictos](Fusion-y-conflictos.md) |
+| Tengo trabajo a medias y debo cambiar de rama | [Stash](Stash.md) y [git switch](Switch.md) |
+| Quiero un historial lineal antes de abrir el pull request | [Rebase](Rebase.md) |
+| Necesito un solo commit en otra rama | [Cherry-pick](Cherry-pick.md) |
+| Un fichero con secretos ya está versionado | [.gitignore](gitignore.md) |
+| El `push` por HTTPS pide credenciales que ya no valen | [Tokens de acceso en remotos](Tokens-de-Acceso-en-Remotos.md) |
+| No sé qué commit introdujo un fallo | [git bisect](git-bisect.md) |
 
 ---
 
