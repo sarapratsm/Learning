@@ -73,6 +73,7 @@ Colección personal de guías de tecnología en español, organizadas por catego
 - Mecanismos de notificación (avisos flotantes, excepciones, chatter, seguidores, plantillas de correo, actividades)
 - Botones de acción (type="object") y ejecución de lógica desde vistas
 - Herencia de vistas con xpath
+- Frontend del cliente web (assets, componentes Owl, plantillas QWeb de cliente y SCSS)
 - Integración en el systray (iconos personalizados en la barra superior)
 - Bus de eventos de OWL (env.bus) para reactividad e intercomunicación de componentes
 - Flujo de contribución de fixes al núcleo de Odoo y módulos de OCA

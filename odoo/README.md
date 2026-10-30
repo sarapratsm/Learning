@@ -1,6 +1,6 @@
 # Odoo — Guía de tecnología
 
-Colección introductoria sobre **Odoo** (el ERP de código abierto), organizada en diez subcolecciones: los **fundamentos** para entender qué es y cómo está montado (incluida la estructura de datos del ORM, el recordset), las **pruebas seguras** para tocar un sistema en producción sin romperlo, el **desarrollo de búsquedas y filtros** que ve el usuario, las **maneras de configurar parámetros** para no dejar valores clavados en el código, los **mecanismos de notificación** con los que el sistema avisa a las personas, los **botones de acción** con los que una vista dispara código propio sobre un registro concreto, el **systray** con el que se añade un icono propio a la barra de navegación, el **bus de eventos de OWL** con el que dos partes de la interfaz que no se conocen se avisan de un cambio, cómo **contribuir un fix a Odoo o a la OCA** cuando el bug no está en código propio, y los **hitos de proyecto** con los que se marcan las entregas y se factura por ellas. Está escrita para perfiles junior, sin dar por supuesta experiencia previa con Odoo ni con sistemas de gestión.
+Colección introductoria sobre **Odoo** (el ERP de código abierto), organizada en once subcolecciones: los **fundamentos** para entender qué es y cómo está montado (incluida la estructura de datos del ORM, el recordset), las **pruebas seguras** para tocar un sistema en producción sin romperlo, el **desarrollo de búsquedas y filtros** que ve el usuario, las **maneras de configurar parámetros** para no dejar valores clavados en el código, los **mecanismos de notificación** con los que el sistema avisa a las personas, los **botones de acción** con los que una vista dispara código propio sobre un registro concreto, el **systray** con el que se añade un icono propio a la barra de navegación, el **bus de eventos de OWL** con el que dos partes de la interfaz que no se conocen se avisan de un cambio, cómo **contribuir un fix a Odoo o a la OCA** cuando el bug no está en código propio, los **hitos de proyecto** con los que se marcan las entregas y se factura por ellas, y el **frontend** del cliente web (assets, componentes Owl, plantillas QWeb y SCSS). Está escrita para perfiles junior, sin dar por supuesta experiencia previa con Odoo ni con sistemas de gestión.
 
 Cada subcolección tiene su propio índice con orden de lectura. Si empiezas de cero, recórrelas en el orden de abajo.
 
@@ -110,6 +110,17 @@ Cómo se marcan los puntos de entrega de un proyecto y, si el pedido de venta lo
 |---|---|---|
 | 32 | [Hitos de proyecto](hitos-de-proyecto/Hitos-de-Proyecto.md) | El concepto, la activación global y por proyecto, la herencia a subtareas y el campo que se vacía sin avisar. |
 | 33 | [Facturación por hitos](hitos-de-proyecto/Facturacion-por-Hitos.md) | La cadena producto → línea de pedido → hito, los porcentajes y los errores que dan una factura equivocada. |
+
+### 11. [Frontend de Odoo](frontend-js/README.md)
+
+La parte del cliente web que se ejecuta en el navegador: estructura de un módulo, componentes Owl, plantillas QWeb de cliente y estilos SCSS.
+
+| # | Archivo | Por qué leerlo aquí |
+|---|---|---|
+| 34 | [Estructura y assets](frontend-js/Estructura-y-Assets.md) | Dónde van los ficheros, cómo se declaran en el manifest y cómo ver los cambios. |
+| 35 | [Componentes OWL](frontend-js/Componentes-OWL.md) | Clase, estado reactivo, props, ciclo de vida y servicios de Odoo. |
+| 36 | [Plantillas QWeb de cliente](frontend-js/Plantillas-QWeb-de-Cliente.md) | El lenguaje de plantillas de cada componente y cómo heredar una existente. |
+| 37 | [SCSS y clases CSS](frontend-js/SCSS-y-Clases-CSS.md) | Estilos acotados, y cómo resolver los choques con Bootstrap y con Odoo. |
 
 ---
 
