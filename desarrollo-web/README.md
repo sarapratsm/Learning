@@ -38,3 +38,6 @@ Cómo hacer que un buscador encuentre y entienda las páginas de una web: rastre
 
 ### [Direcciones web y SEO técnico](direcciones-web/README.md)
 Lo que una web declara sobre sus propias direcciones: la dirección base, absolutas y relativas, la barra final, la dirección canónica, `hreflang` y `x-default`, `robots.txt` y el sitemap, la vista previa al compartir (Open Graph), los datos estructurados con JSON-LD, las redirecciones 301 y 302 (incluida la de idioma) y cómo se genera todo con la API de metadatos de Next.js en una exportación estática, con un caso práctico de un sitio multiidioma de principio a fin.
+
+### [Imágenes y derechos de autor](imagenes-y-derechos-de-autor/README.md)
+Cómo poner fotos en una web sin problemas de copyright: qué protege el derecho de autor, dominio público y licencias Creative Commons, las licencias de bancos gratuitos como Pexels, Unsplash, Pixabay y Wikimedia Commons, y los hábitos al publicar (registrar el origen, dar crédito, texto alternativo, webp y comprobación previa).

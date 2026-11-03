@@ -21,6 +21,7 @@ Colección personal de guías de tecnología en español, organizadas por catego
 - Buenas prácticas en webs multiidioma
 - SEO técnico
 - Direcciones web y metadatos (canónica, hreflang, robots.txt, sitemap, Open Graph, JSON-LD y redirecciones)
+- Imágenes y derechos de autor (licencias, bancos gratuitos y buenas prácticas al publicar)
 - Efecto parallax con CSS (historia y técnicas)
 - Integración de un manual de usuario dentro de una app React
 
