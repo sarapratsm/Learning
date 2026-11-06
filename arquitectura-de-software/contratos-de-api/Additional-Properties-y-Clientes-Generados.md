@@ -40,15 +40,16 @@ El efecto es distinto según el sentido:
 
 La combinación que suele funcionar mejor es **cerrado en las peticiones y abierto en las respuestas**: se atrapan los errores de quien llama sin impedir que el servidor evolucione. Si decides cerrar también las respuestas, asumes que **añadir un campo es una ruptura** y lo versionas como tal (ver [Versionado de contratos](Versionado-de-Contratos.md)).
 
-## Obligatorio, opcional y nulo no son lo mismo
+## Obligatorio, opcional, nulo y vacío no son lo mismo
 
-Tres situaciones distintas que se confunden con facilidad:
+Cuatro situaciones distintas que se confunden con facilidad:
 
 | Situación | En el esquema | En el JSON |
 |---|---|---|
 | El campo siempre viene | En `required` | `"brand": "Acme"` |
 | El campo puede **no venir** | Fuera de `required` | (la propiedad no aparece) |
 | El campo viene y **vale nulo** | `type: [string, 'null']` | `"brand": null` |
+| El campo viene y **está vacío** | `type: string`, sin `minLength` | `"brand": ""` |
 
 En OpenAPI 3.1 el nulo se expresa con la lista de tipos; `nullable: true` es de la versión 3.0 y ya no se usa. Un campo puede ser opcional **y** nulable a la vez:
 
@@ -59,6 +60,8 @@ brand:
 ```
 
 Esa distinción importa: «ausente» suele significar *no sé* y «nulo» *se ha vaciado a propósito*.
+
+El **vacío** (`""`) añade un tercer significado posible, y conviene decidirlo y escribirlo. Imagina que cada pedido guarda la `nota` que dejó quien compró. Una convención razonable es que `""` signifique *«se preguntó y no hubo nota»* y `null` *«este pedido es anterior a que existiera el campo, no se sabe»*. Si el contrato no lo dice, cada cliente adivina, y la duda aparece justo cuando algo hereda el valor: una copia del pedido sin nota y una copia de un pedido antiguo se comportarían igual aunque no lo sean. Cuando elijas esta distinción, déjala en la `description` del campo.
 
 ## Del contrato al cliente generado
 

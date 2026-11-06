@@ -25,7 +25,10 @@ La regla de oro: **una ruptura la define quien consume**. Un cambio rompe si un 
 | Añadir un endpoint nuevo | No | Nadie lo usaba |
 | Añadir un campo **opcional** a una respuesta | No (casi siempre) | Los clientes que no lo conocen lo ignoran. Ver la excepción en [additionalProperties y clientes generados](Additional-Properties-y-Clientes-Generados.md) |
 | Añadir un campo **obligatorio** a una petición | **Sí** | Los clientes antiguos no lo envían y la petición falla |
+| Añadir un campo **obligatorio** a una respuesta | No | Quien consume solo lee: un campo de más se ignora |
 | Quitar o renombrar un campo de una respuesta | **Sí** | El cliente lo leía |
+| Dejar de garantizar un campo de una respuesta (pasa de obligatorio a opcional) | **Sí** | El cliente daba por hecho que siempre venía y ahora puede faltar |
+| Permitir que un campo de una respuesta valga nulo cuando antes nunca lo valía | **Sí** | El cliente no comprueba nulos donde el contrato prometía un valor |
 | Cambiar el tipo de un campo (`price` de número a texto) | **Sí** | El cliente lo interpreta mal |
 | Hacer más estricta una validación (antes `name` aceptaba 100 caracteres, ahora 50) | **Sí** | Peticiones que eran válidas dejan de serlo |
 | Hacer más laxa una validación de **petición** | No | Lo antiguo sigue siendo válido |

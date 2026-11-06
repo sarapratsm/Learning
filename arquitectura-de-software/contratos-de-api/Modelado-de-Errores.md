@@ -54,6 +54,19 @@ Con esto, la interfaz pinta «La URL debe empezar por https://» **debajo de la 
 - **El nombre del campo es el del JSON**, no el de la propiedad del servidor. Si el servidor valida `CallbackUrl` y el JSON lleva `callbackUrl`, alguien tiene que convertirlo y conviene que sea con un mapa explícito, no con reflexión.
 - **El `message` y el `code` de nivel superior se conservan.** Un cliente antiguo que solo lee `code` sigue funcionando.
 
+## Cuando fallan varias cosas a la vez
+
+Una petición puede incumplir dos cosas a la vez: un cuerpo mal formado y, además, un campo demasiado largo. Si cada comprobación vive en una capa distinta (el *framework* valida el JSON, el servidor valida las reglas de negocio), **la respuesta lleva un solo código** y manda el de la comprobación que corre antes.
+
+Eso es aceptable si se decide a propósito y se documenta. La persona que consume corrige el primer error, reintenta y, si el segundo sigue ahí, lo recibe entonces. Lo que no es aceptable es que el orden dependa del azar de la implementación, porque el mismo cuerpo daría códigos distintos según la versión del servidor.
+
+| Opción | Cuándo encaja |
+|---|---|
+| Un código y orden fijo | Las comprobaciones viven en capas distintas y el caso es raro desde la interfaz |
+| Todos los errores a la vez (`errors`) | Es un formulario con varios campos y la persona agradece verlos juntos (ver la sección anterior) |
+
+Si eliges la primera, escribe el orden en la `description` de la operación: «un cuerpo mal formado se responde con `VALIDATION_ERROR` antes de comprobar los límites de cada campo».
+
 ## Lo que un error no debe llevar
 
 Un cuerpo de error acaba en pantallas, en logs, en herramientas de monitorización y en capturas que se pegan en un chat. Por eso:
