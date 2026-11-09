@@ -7,7 +7,7 @@ Cómo organizar el código de una aplicación y cómo diseñar la comunicación 
 ## Contenido
 
 ### [Clean Architecture](clean-architecture/README.md)
-Cómo separar dominio, casos de uso e infraestructura para que el código sea fácil de mantener, probar y cambiar.
+Cómo separar dominio, casos de uso e infraestructura para que el código sea fácil de mantener, probar y cambiar: la regla de dependencia, la inversión de dependencias, los puertos y adaptadores, dónde vive cada código de resultado y cómo repartir el código entre módulos y proyectos compartidos.
 
 ### [Patrones de diseño](patrones-de-diseno/README.md)
 Domain-Driven Design (bounded context, objetos de valor, entidades y agregados, repositorios, eventos de dominio) y una selección de patrones de diseño clásicos (Factory, Strategy, Decorator).
