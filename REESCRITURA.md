@@ -166,15 +166,18 @@ Lo que funciona, aprendido en la primera tanda:
 - **Los agentes de fichas hermanas se contradicen sobre lo que dicen las otras.** El 09/11/2026, un agente de `clean-architecture` afirmó que dos fichas hermanas señalaban los fallos con una excepción porque el brief se lo indicaba, sin haberlas leído; una de las dos devolvía un enum tipado. Y el mismo enum se llamó de tres formas distintas en tres fichas. La verificación de estructura no lo detecta: hay que cruzar con `grep` los nombres compartidos y las afirmaciones sobre otras fichas, y el brief debe fijar el nombre exacto de cada tipo compartido.
 - **Un brief común en un fichero ahorra repetirlo en cada agente.** El 09/11/2026 las reglas, el esqueleto, el ejemplo conductor y el mapa de la colección de `patrones-de-diseno` se escribieron una vez en un fichero del scratchpad y cada agente recibió un prompt corto con su contenido específico y la ruta del brief. Funcionó igual que el brief inline y el hilo principal envió una fracción del texto.
 - **Los agentes arreglan afirmaciones falsas de las fichas antiguas si el brief les pide verificar.** Con la licencia de MediatR y la igualdad de colecciones en `record`, las fichas antiguas afirmaban cosas incorrectas; los agentes las comprobaron y las corrigieron porque el brief decía «verifícalo antes de mantenerlo». Conviene pedirlo siempre que la ficha antigua contenga un dato que cambia con el tiempo (versiones, licencias, precios).
+- **El metacomentario («esta guía», «esta ficha», «este documento») reaparece aunque el brief lo prohíba.** El 09/11/2026 salieron once casos en las nueve fichas primeras de `tipos-de-apis`, casi todos al describir de dónde salen las salidas citadas («las salidas de esta guía provienen de…»). Tras cada tanda: `grep -nE '(esta|la|de la|en esta) ficha|esta guía|este documento' *.md`. La corrección es quitar la referencia al documento y dejar el dato («las salidas provienen de…»).
+- **Los fragmentos de código de las fichas se abrevian respecto al código probado, y a veces con helpers inventados.** El agente de `REST` usó un atajo `Problem(400, ...)` que no existe en el servidor que compiló. Pedir en el brief que el código de la ficha sea el probado, o que lo abreviado se marque como tal, y buscar en el informe del agente las frases «recortado», «abreviado» y «ilustrativo» antes de comitear.
+- **Un agente denegado por el sistema no lo rodea.** El 09/11/2026 el sistema denegó al agente de `gRPC` descargar y ejecutar `grpcurl`; el agente no buscó un camino alternativo y la ficha muestra solo los comandos, sin salida inventada. Es el comportamiento esperado: la ficha dice lo que no se pudo ejecutar.
 - **Se puede parar una tanda a mitad sin dejar destrozos.** Al cerrar la sesión del 28/07/2026 se detuvieron cuatro agentes en marcha: tres estaban leyendo o preparando y no habían tocado nada, y el cuarto había terminado un documento válido y solo le quedaba una pasada de recorte. Ninguna ficha quedó a medio escribir. Aun así, tras parar conviene comprobar la estructura de cada fichero afectado antes de comitear.
 
 ---
 
 ## 7. Estado
 
-**Convertidas: 131 fichas en 21 colecciones. Pendientes: 128 fichas en 13 colecciones.**
+**Convertidas: 144 fichas en 22 colecciones. Pendientes: 115 fichas en 12 colecciones.**
 
-Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, las 10 de `autenticacion-y-autorizacion` (ya completa), las 12 de `devops/ci-cd`, las 19 de `devops/git`, las 9 de `arquitectura-de-software/clean-architecture` y las 11 de `arquitectura-de-software/patrones-de-diseno`. El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
+Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, las 10 de `autenticacion-y-autorizacion` (ya completa), las 12 de `devops/ci-cd`, las 19 de `devops/git`, las 9 de `arquitectura-de-software/clean-architecture` y las 11 de `arquitectura-de-software/patrones-de-diseno` y las 13 de `arquitectura-de-software/tipos-de-apis`. El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
 
 ### `seguridad/autenticacion-y-autorizacion`: completa (14/09/2026)
 
@@ -204,6 +207,7 @@ Las cuatro fichas que quedaban (`JWT-Refresh.md`, `JWT-Refresh-vs-Tokens-Opacos.
 | `devops/git` | 19 | Cerrada el 30/10/2026. Las salidas de comandos se capturaron con Git 2.54 en repositorios temporales. `GitHub-Actions.md` queda como introducción breve del vínculo Git↔Actions y remite a la ficha de `ci-cd`. `Tokens-de-Acceso-en-Remotos.md` pasó de 41 a 172 líneas y ya no recomienda incrustar el token en la URL. |
 | `arquitectura-de-software/clean-architecture` | 9 | Cerrada el 09/11/2026. Fichas de 241 a 435 líneas con el ejemplo conductor de la tienda (`Tienda.Dominio`, `Tienda.Aplicacion`, `Tienda.Infraestructura`, `Tienda.Api`; pedido #4711). El código de cada ficha se compiló con .NET 10 y las salidas citadas son reales, salvo lo que cada ficha marca como no ejecutado (adaptadores contra SQL Server y Stripe, `HasDefaultSchema`). `Modulos-vs-Shared.md` y `Codigos-de-Resultado-por-Capa.md` perdieron el vocabulario de un proyecto privado (`BaseCommandResponse`, `Manager`, `Strategy`). `Clean-Architecture.md` señala los fallos con una excepción de negocio y `Casos-de-Uso.md` con un enum tipado; `Codigos-de-Resultado-por-Capa.md` presenta ambas opciones. El enum se llama `ConfirmarPedidoResultado` en todas las fichas, con miembros propios en cada una. Sin `Recursos didácticos` en `Capa-de-Dominio`, `Capa-de-Infraestructura`, `Inversion-de-Dependencias`, `Puertos-y-Adaptadores` y `Regla-de-Dependencia`: no había recursos que valieran la pena. |
 | `arquitectura-de-software/patrones-de-diseno` | 11 | Cerrada el 09/11/2026. Fichas de 215 a 537 líneas con el ejemplo conductor de la tienda, coherente con `clean-architecture` (los puertos viven en `Tienda.Aplicacion`; las firmas de `Pedido`, `Dinero` y los ids salen de `Capa-de-Dominio.md`). Código compilado con .NET 10 y salidas reales, incluidos los fallos que ilustran cada patrón (el `IQueryable` genérico que lee 5000 filas sin `WHERE`, el evento despachado antes de guardar, la caché obsoleta, un benchmark de excepción frente a resultado). `MediatR.md` corrige la ficha antigua: afirmaba «MIT hasta la v12» y los paquetes 12.x declaran Apache-2.0; desde la 13 la licencia es RPL-1.5 o comercial (consultado el 09/11/2026; las condiciones comerciales no se pudieron confirmar). Los ejemplos de `MediatR.md` se probaron con la 12.5.0. `Value-Objects.md` corrige la afirmación de la ficha antigua de que un `record` con una colección inmutable compara por valor: con `List<T>` y con `ImmutableArray<T>` la igualdad da `False`. `Capa-de-Dominio.md` pasó a redondear con `MidpointRounding.AwayFromZero` explícito para coincidir con `Value-Objects.md`. Sin `Recursos didácticos` salvo en `Decorator`, `Domain-Driven-Design` y `Value-Objects`. |
+| `arquitectura-de-software/tipos-de-apis` | 13 | Cerrada el 09/11/2026. Fichas de 211 a 583 líneas con el ejemplo conductor de la tienda (`products`, `orders`, `customers`, rutas en inglés), el mismo que `contratos-de-api`. Cada estilo se demuestra con un servidor mínimo de .NET 10 y salidas reales de `curl`: el `304` y `412` de REST, el N+1 de GraphQL (de 21 llamadas a 2 con `BatchDataLoader`), JSON-RPC 2.0 contrastado con la especificación, gRPC (192 bytes en JSON frente a 33 en protobuf), SOAP con CoreWCF y `dotnet-svcutil`, el handshake de WebSockets, la trampa de `eventType:` en `TypedResults.ServerSentEvents`, long polling con 1000 peticiones retenidas, la firma HMAC y el SSRF de los webhooks, un broker en memoria para eventos y Kiota para SDK. Los límites de uso por audiencia usan `AddRateLimiter`. Sin `Recursos didácticos` en ninguna ficha. Quedan sin probar: `grpcurl` (el sistema denegó descargar el binario; la ficha muestra solo los comandos), los efectos de proxys reales en SSE y long polling, y cualquier prueba en un navegador real. |
 | `testing/tdd-bdd-sdd` | 3 | Creada el 30/10/2026 directamente en formato nuevo (no es una conversión): `TDD.md`, `BDD.md` y `SDD.md` (544-721 líneas), con el ejemplo conductor del cupón de descuento en C#/.NET. `SDD.md` remite a `ia/ingenieria-con-llms/Desarrollo-Dirigido-por-Especificacion.md` para el flujo con agentes. |
 
 ### Pendiente
@@ -212,19 +216,18 @@ Orden propuesto: por valor de uso y por dependencias entre colecciones. Las pequ
 
 | # | Colección | Fichas | Avisos |
 |---:|---|---:|---|
-| 1 | `arquitectura-de-software/tipos-de-apis` | 13 | |
-| 2 | `arquitectura-de-software/multi-tenancy` | 7 | |
-| 3 | `lenguajes/csharp-dotnet` (+ 2 subcarpetas) | 8 | Tiene subcarpetas con README propio. |
-| 4 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
-| 5 | `desarrollo-web/asp-net-core` | 9 | |
-| 6 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
-| 7 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
-| 8 | `redes/redes-y-acceso-remoto` | 11 | `SSH.md` y `VPN.md` se cruzan con `despliegue-en-vps`, ya convertida. |
-| 9 | `odoo/fundamentos` | 4 | |
-| 10 | `odoo/busqueda-y-filtros` | 4 | |
-| 11 | `odoo/pruebas-seguras` | 5 | |
-| 12 | `odoo/configuracion-parametros` | 6 | |
-| 13 | `ia/context-engineering` | 9 | Revisar solapamiento con `ia/ingenieria-con-llms`, ya en formato nuevo. |
+| 1 | `arquitectura-de-software/multi-tenancy` | 7 | |
+| 2 | `lenguajes/csharp-dotnet` (+ 2 subcarpetas) | 8 | Tiene subcarpetas con README propio. |
+| 3 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
+| 4 | `desarrollo-web/asp-net-core` | 9 | |
+| 5 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
+| 6 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
+| 7 | `redes/redes-y-acceso-remoto` | 11 | `SSH.md` y `VPN.md` se cruzan con `despliegue-en-vps`, ya convertida. |
+| 8 | `odoo/fundamentos` | 4 | |
+| 9 | `odoo/busqueda-y-filtros` | 4 | |
+| 10 | `odoo/pruebas-seguras` | 5 | |
+| 11 | `odoo/configuracion-parametros` | 6 | |
+| 12 | `ia/context-engineering` | 9 | Revisar solapamiento con `ia/ingenieria-con-llms`, ya en formato nuevo. |
 
 > `odoo/notificaciones` no está en esta lista: se creó directamente en formato nuevo (no es una conversión), y está incompleta a propósito — le faltan 3 fichas propias, detalladas en su README.
 
