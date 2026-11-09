@@ -10,7 +10,7 @@ Cómo organizar el código de una aplicación y cómo diseñar la comunicación 
 Cómo separar dominio, casos de uso e infraestructura para que el código sea fácil de mantener, probar y cambiar: la regla de dependencia, la inversión de dependencias, los puertos y adaptadores, dónde vive cada código de resultado y cómo repartir el código entre módulos y proyectos compartidos.
 
 ### [Patrones de diseño](patrones-de-diseno/README.md)
-Domain-Driven Design (bounded context, objetos de valor, entidades y agregados, repositorios, eventos de dominio) y una selección de patrones de diseño clásicos (Factory, Strategy, Decorator).
+Domain-Driven Design (contextos delimitados, objetos de valor, entidades y agregados, repositorios, eventos de dominio), patrones de diseño clásicos (Factory, Strategy, Decorator, Mediator y su implementación MediatR) y el Result Pattern para comunicar fallos esperados como valores.
 
 ### [Multi-Tenancy](multi-tenancy/README.md)
 Cómo una sola aplicación da servicio a muchos clientes (*tenants*) manteniendo sus datos aislados.

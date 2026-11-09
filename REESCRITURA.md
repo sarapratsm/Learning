@@ -164,15 +164,17 @@ Lo que funciona, aprendido en la primera tanda:
 - **Pedirle que escriba pronto y refine con ediciones, no que vuelque el documento al final.** El 28/07/2026 un agente murió con `Connection closed mid-response` justo después de leer las referencias y antes de escribir una sola línea: se perdió todo su trabajo. Los que escriben temprano y van editando sobreviven a un fallo tardío con un documento aprovechable. Ante un agente caído, lo primero es mirar el fichero: si sigue en su versión original, se relanza sin más.
 - **Dar a cada agente su propia carpeta de trabajo en el scratchpad.** El 30/10/2026, dos agentes de la tanda de `devops/git` usaron `scratchpad/lab/tienda` para sus repositorios de prueba: uno ejecutó `rm -rf lab` y borró el del otro, y un tercero lanzó `git rebase` sobre un repositorio ajeno (sin efecto, el hash no cambió). Solo se perdieron repositorios de prueba, pero el brief debe indicar un directorio distinto por agente (por ejemplo `scratchpad/<ficha>/`).
 - **Los agentes de fichas hermanas se contradicen sobre lo que dicen las otras.** El 09/11/2026, un agente de `clean-architecture` afirmó que dos fichas hermanas señalaban los fallos con una excepción porque el brief se lo indicaba, sin haberlas leído; una de las dos devolvía un enum tipado. Y el mismo enum se llamó de tres formas distintas en tres fichas. La verificación de estructura no lo detecta: hay que cruzar con `grep` los nombres compartidos y las afirmaciones sobre otras fichas, y el brief debe fijar el nombre exacto de cada tipo compartido.
+- **Un brief común en un fichero ahorra repetirlo en cada agente.** El 09/11/2026 las reglas, el esqueleto, el ejemplo conductor y el mapa de la colección de `patrones-de-diseno` se escribieron una vez en un fichero del scratchpad y cada agente recibió un prompt corto con su contenido específico y la ruta del brief. Funcionó igual que el brief inline y el hilo principal envió una fracción del texto.
+- **Los agentes arreglan afirmaciones falsas de las fichas antiguas si el brief les pide verificar.** Con la licencia de MediatR y la igualdad de colecciones en `record`, las fichas antiguas afirmaban cosas incorrectas; los agentes las comprobaron y las corrigieron porque el brief decía «verifícalo antes de mantenerlo». Conviene pedirlo siempre que la ficha antigua contenga un dato que cambia con el tiempo (versiones, licencias, precios).
 - **Se puede parar una tanda a mitad sin dejar destrozos.** Al cerrar la sesión del 28/07/2026 se detuvieron cuatro agentes en marcha: tres estaban leyendo o preparando y no habían tocado nada, y el cuarto había terminado un documento válido y solo le quedaba una pasada de recorte. Ninguna ficha quedó a medio escribir. Aun así, tras parar conviene comprobar la estructura de cada fichero afectado antes de comitear.
 
 ---
 
 ## 7. Estado
 
-**Convertidas: 120 fichas en 20 colecciones. Pendientes: 139 fichas en 14 colecciones.**
+**Convertidas: 131 fichas en 21 colecciones. Pendientes: 128 fichas en 13 colecciones.**
 
-Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, las 10 de `autenticacion-y-autorizacion` (ya completa), las 12 de `devops/ci-cd`, las 19 de `devops/git` y las 9 de `arquitectura-de-software/clean-architecture`. El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
+Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, las 10 de `autenticacion-y-autorizacion` (ya completa), las 12 de `devops/ci-cd`, las 19 de `devops/git`, las 9 de `arquitectura-de-software/clean-architecture` y las 11 de `arquitectura-de-software/patrones-de-diseno`. El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
 
 ### `seguridad/autenticacion-y-autorizacion`: completa (14/09/2026)
 
@@ -201,6 +203,7 @@ Las cuatro fichas que quedaban (`JWT-Refresh.md`, `JWT-Refresh-vs-Tokens-Opacos.
 | `devops/ci-cd` | 12 | Cerrada el 30/10/2026. Reescritura completa de las 12 fichas (118-418 líneas) con el ejemplo conductor de `devops/`; las tres plataformas (`GitHub-Actions`, `GitLab-CI`, `Jenkins`) comparten un pipeline equivalente y una tabla de equivalencia de vocabulario. En `Release-por-Tag.md` se sustituyó el rollback con `git push --force-with-lease` (no despliega nada) por `workflow_dispatch` con el tag a desplegar. |
 | `devops/git` | 19 | Cerrada el 30/10/2026. Las salidas de comandos se capturaron con Git 2.54 en repositorios temporales. `GitHub-Actions.md` queda como introducción breve del vínculo Git↔Actions y remite a la ficha de `ci-cd`. `Tokens-de-Acceso-en-Remotos.md` pasó de 41 a 172 líneas y ya no recomienda incrustar el token en la URL. |
 | `arquitectura-de-software/clean-architecture` | 9 | Cerrada el 09/11/2026. Fichas de 241 a 435 líneas con el ejemplo conductor de la tienda (`Tienda.Dominio`, `Tienda.Aplicacion`, `Tienda.Infraestructura`, `Tienda.Api`; pedido #4711). El código de cada ficha se compiló con .NET 10 y las salidas citadas son reales, salvo lo que cada ficha marca como no ejecutado (adaptadores contra SQL Server y Stripe, `HasDefaultSchema`). `Modulos-vs-Shared.md` y `Codigos-de-Resultado-por-Capa.md` perdieron el vocabulario de un proyecto privado (`BaseCommandResponse`, `Manager`, `Strategy`). `Clean-Architecture.md` señala los fallos con una excepción de negocio y `Casos-de-Uso.md` con un enum tipado; `Codigos-de-Resultado-por-Capa.md` presenta ambas opciones. El enum se llama `ConfirmarPedidoResultado` en todas las fichas, con miembros propios en cada una. Sin `Recursos didácticos` en `Capa-de-Dominio`, `Capa-de-Infraestructura`, `Inversion-de-Dependencias`, `Puertos-y-Adaptadores` y `Regla-de-Dependencia`: no había recursos que valieran la pena. |
+| `arquitectura-de-software/patrones-de-diseno` | 11 | Cerrada el 09/11/2026. Fichas de 215 a 537 líneas con el ejemplo conductor de la tienda, coherente con `clean-architecture` (los puertos viven en `Tienda.Aplicacion`; las firmas de `Pedido`, `Dinero` y los ids salen de `Capa-de-Dominio.md`). Código compilado con .NET 10 y salidas reales, incluidos los fallos que ilustran cada patrón (el `IQueryable` genérico que lee 5000 filas sin `WHERE`, el evento despachado antes de guardar, la caché obsoleta, un benchmark de excepción frente a resultado). `MediatR.md` corrige la ficha antigua: afirmaba «MIT hasta la v12» y los paquetes 12.x declaran Apache-2.0; desde la 13 la licencia es RPL-1.5 o comercial (consultado el 09/11/2026; las condiciones comerciales no se pudieron confirmar). Los ejemplos de `MediatR.md` se probaron con la 12.5.0. `Value-Objects.md` corrige la afirmación de la ficha antigua de que un `record` con una colección inmutable compara por valor: con `List<T>` y con `ImmutableArray<T>` la igualdad da `False`. `Capa-de-Dominio.md` pasó a redondear con `MidpointRounding.AwayFromZero` explícito para coincidir con `Value-Objects.md`. Sin `Recursos didácticos` salvo en `Decorator`, `Domain-Driven-Design` y `Value-Objects`. |
 | `testing/tdd-bdd-sdd` | 3 | Creada el 30/10/2026 directamente en formato nuevo (no es una conversión): `TDD.md`, `BDD.md` y `SDD.md` (544-721 líneas), con el ejemplo conductor del cupón de descuento en C#/.NET. `SDD.md` remite a `ia/ingenieria-con-llms/Desarrollo-Dirigido-por-Especificacion.md` para el flujo con agentes. |
 
 ### Pendiente
@@ -209,20 +212,19 @@ Orden propuesto: por valor de uso y por dependencias entre colecciones. Las pequ
 
 | # | Colección | Fichas | Avisos |
 |---:|---|---:|---|
-| 1 | `arquitectura-de-software/patrones-de-diseno` | 11 | 9 ficheros con banner 🧭. Carpeta renombrada de `patrones-de-diseño` el 27/07/2026. Las fichas de `clean-architecture` enlazan a `Result-Pattern`, `Repositorios`, `Entidades-y-Agregados`, `Value-Objects`, `Domain-Events`, `MediatR` y `Domain-Driven-Design`: al convertirlas, revisar que no repitan lo que ya desarrollan `Capa-de-Dominio` y `Codigos-de-Resultado-por-Capa`. |
-| 2 | `arquitectura-de-software/tipos-de-apis` | 13 | |
-| 3 | `arquitectura-de-software/multi-tenancy` | 7 | |
-| 4 | `lenguajes/csharp-dotnet` (+ 2 subcarpetas) | 8 | Tiene subcarpetas con README propio. |
-| 5 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
-| 6 | `desarrollo-web/asp-net-core` | 9 | |
-| 7 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
-| 8 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
-| 9 | `redes/redes-y-acceso-remoto` | 11 | `SSH.md` y `VPN.md` se cruzan con `despliegue-en-vps`, ya convertida. |
-| 10 | `odoo/fundamentos` | 4 | |
-| 11 | `odoo/busqueda-y-filtros` | 4 | |
-| 12 | `odoo/pruebas-seguras` | 5 | |
-| 13 | `odoo/configuracion-parametros` | 6 | |
-| 14 | `ia/context-engineering` | 9 | Revisar solapamiento con `ia/ingenieria-con-llms`, ya en formato nuevo. |
+| 1 | `arquitectura-de-software/tipos-de-apis` | 13 | |
+| 2 | `arquitectura-de-software/multi-tenancy` | 7 | |
+| 3 | `lenguajes/csharp-dotnet` (+ 2 subcarpetas) | 8 | Tiene subcarpetas con README propio. |
+| 4 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
+| 5 | `desarrollo-web/asp-net-core` | 9 | |
+| 6 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
+| 7 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
+| 8 | `redes/redes-y-acceso-remoto` | 11 | `SSH.md` y `VPN.md` se cruzan con `despliegue-en-vps`, ya convertida. |
+| 9 | `odoo/fundamentos` | 4 | |
+| 10 | `odoo/busqueda-y-filtros` | 4 | |
+| 11 | `odoo/pruebas-seguras` | 5 | |
+| 12 | `odoo/configuracion-parametros` | 6 | |
+| 13 | `ia/context-engineering` | 9 | Revisar solapamiento con `ia/ingenieria-con-llms`, ya en formato nuevo. |
 
 > `odoo/notificaciones` no está en esta lista: se creó directamente en formato nuevo (no es una conversión), y está incompleta a propósito — le faltan 3 fichas propias, detalladas en su README.
 

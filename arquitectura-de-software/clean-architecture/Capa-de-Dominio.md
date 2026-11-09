@@ -201,7 +201,7 @@ public sealed record Dinero
             throw new ReglaDeDominioException("El dinero no puede ser negativo.");
         if (string.IsNullOrWhiteSpace(moneda) || moneda.Length != 3)
             throw new ReglaDeDominioException("La moneda debe ser un código de 3 letras.");
-        return new Dinero(Math.Round(importe, 2), moneda.ToUpperInvariant());
+        return new Dinero(Math.Round(importe, 2, MidpointRounding.AwayFromZero), moneda.ToUpperInvariant());
     }
 
     public static Dinero Cero(string moneda) => De(0, moneda);
