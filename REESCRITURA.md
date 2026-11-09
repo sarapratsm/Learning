@@ -177,9 +177,9 @@ Lo que funciona, aprendido en la primera tanda:
 
 ## 7. Estado
 
-**Convertidas: 151 fichas en 23 colecciones. Pendientes: 108 fichas en 11 colecciones.**
+**Convertidas: 159 fichas en 24 colecciones. Pendientes: 100 fichas en 10 colecciones.**
 
-Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, las 10 de `autenticacion-y-autorizacion` (ya completa), las 12 de `devops/ci-cd`, las 19 de `devops/git`, las 9 de `arquitectura-de-software/clean-architecture`, las 11 de `arquitectura-de-software/patrones-de-diseno`, las 13 de `arquitectura-de-software/tipos-de-apis` y las 7 de `arquitectura-de-software/multi-tenancy`. El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
+Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, las 10 de `autenticacion-y-autorizacion` (ya completa), las 12 de `devops/ci-cd`, las 19 de `devops/git`, las 9 de `arquitectura-de-software/clean-architecture`, las 11 de `arquitectura-de-software/patrones-de-diseno`, las 13 de `arquitectura-de-software/tipos-de-apis`, las 7 de `arquitectura-de-software/multi-tenancy` y las 8 de `lenguajes/csharp-dotnet`. El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
 
 ### `seguridad/autenticacion-y-autorizacion`: completa (14/09/2026)
 
@@ -211,6 +211,7 @@ Las cuatro fichas que quedaban (`JWT-Refresh.md`, `JWT-Refresh-vs-Tokens-Opacos.
 | `arquitectura-de-software/patrones-de-diseno` | 11 | Cerrada el 09/11/2026. Fichas de 215 a 537 líneas con el ejemplo conductor de la tienda, coherente con `clean-architecture` (los puertos viven en `Tienda.Aplicacion`; las firmas de `Pedido`, `Dinero` y los ids salen de `Capa-de-Dominio.md`). Código compilado con .NET 10 y salidas reales, incluidos los fallos que ilustran cada patrón (el `IQueryable` genérico que lee 5000 filas sin `WHERE`, el evento despachado antes de guardar, la caché obsoleta, un benchmark de excepción frente a resultado). `MediatR.md` corrige la ficha antigua: afirmaba «MIT hasta la v12» y los paquetes 12.x declaran Apache-2.0; desde la 13 la licencia es RPL-1.5 o comercial (consultado el 09/11/2026; las condiciones comerciales no se pudieron confirmar). Los ejemplos de `MediatR.md` se probaron con la 12.5.0. `Value-Objects.md` corrige la afirmación de la ficha antigua de que un `record` con una colección inmutable compara por valor: con `List<T>` y con `ImmutableArray<T>` la igualdad da `False`. `Capa-de-Dominio.md` pasó a redondear con `MidpointRounding.AwayFromZero` explícito para coincidir con `Value-Objects.md`. Sin `Recursos didácticos` salvo en `Decorator`, `Domain-Driven-Design` y `Value-Objects`. |
 | `arquitectura-de-software/tipos-de-apis` | 13 | Cerrada el 09/11/2026. Fichas de 211 a 583 líneas con el ejemplo conductor de la tienda (`products`, `orders`, `customers`, rutas en inglés), el mismo que `contratos-de-api`. Cada estilo se demuestra con un servidor mínimo de .NET 10 y salidas reales de `curl`: el `304` y `412` de REST, el N+1 de GraphQL (de 21 llamadas a 2 con `BatchDataLoader`), JSON-RPC 2.0 contrastado con la especificación, gRPC (192 bytes en JSON frente a 33 en protobuf), SOAP con CoreWCF y `dotnet-svcutil`, el handshake de WebSockets, la trampa de `eventType:` en `TypedResults.ServerSentEvents`, long polling con 1000 peticiones retenidas, la firma HMAC y el SSRF de los webhooks, un broker en memoria para eventos y Kiota para SDK. Los límites de uso por audiencia usan `AddRateLimiter`. Sin `Recursos didácticos` en ninguna ficha. Quedan sin probar: `grpcurl` (el sistema denegó descargar el binario; la ficha muestra solo los comandos), los efectos de proxys reales en SSE y long polling, y cualquier prueba en un navegador real. |
 | `arquitectura-de-software/multi-tenancy` | 7 | Cerrada el 09/11/2026. Fichas de 217 a 598 líneas con el ejemplo conductor de una aplicación SaaS de pedidos (tenants `acme` y `globex` en `miapp.ejemplo.com`). Todo el código se ejecutó con .NET 10, EF Core 10 y SQLite, y cada ficha ilustra la fuga entre tenants desde su ángulo con salidas reales: el endpoint sin filtro, la cabecera `X-Tenant-Id` falsificada, el contexto `Singleton`, el tenant capturado en el modelo de EF, la caché sin prefijo y el borrado sin `Where`. No se ejecutó nada contra PostgreSQL ni SQL Server (esquema por tenant, Row-Level Security, `CREATE DATABASE`): las fichas lo marcan y citan la documentación del motor leída. Correcciones respecto al brief, descubiertas al ejecutar: `FromSqlRaw` sobre un `DbSet` SÍ aplica el filtro de EF (los huecos reales son `SqlQueryRaw`, `ExecuteSqlRaw` y la conexión directa); `Update`/`Attach` de una entidad desconectada con el `Id` de otro tenant escribe en la fila ajena; y un valor de `AsyncLocal` no se queda en el hilo del pool tras una tarea (la trampa real es el flujo lógico). `Aprovisionamiento-y-Migraciones.md` usa `Status` (`Provisioning`/`Active`/`Failed`) en lugar de `IsActive` y lo justifica. Sin `Recursos didácticos` en ninguna ficha. |
+| `lenguajes/csharp-dotnet` | 8 | Cerrada el 09/11/2026 (las 8 fichas de `fundamentos/`, `caracteristicas-del-lenguaje/` y la raíz; los READMEs de las dos subcarpetas no se tocaron). Fichas de 346 a 572 líneas con la tienda como ejemplo conductor. Todo se ejecutó con el SDK 10.0.401 y las salidas citadas son reales, con los avisos y errores del compilador y de NuGet con su código: `NU1605`, `NU1603`, `NU1903`, `NU1004`, `NU1008`, `CS8618`, `CS0592`, `CS0579`, `CS0182`, `MSB4006`. Hallazgos al ejecutar: el SDK 10 crea `Tienda.slnx` (formato XML nuevo) y no `.sln` (`MSBuild.md` usa `--format sln`); Native AOT no se pudo probar (`Platform linker not found`) y no hay cifras de AOT; `ValidateDataAnnotations()` exige el paquete `Microsoft.Extensions.Options.DataAnnotations`; un `record` con constructor primario da `MissingMethodException` en `IOptions<T>`; `OnChange` se dispara dos veces por una escritura de fichero; sin `Dispose`, 200 000 `CancellationTokenSource` retienen unos 28 MB; la URL base de atributos del compilador de Microsoft Learn da 404. Fechas de soporte leídas el 09/11/2026: .NET 10 LTS hasta el 14/11/2028; .NET 8 y .NET 9 hasta el 10/11/2026. Sin `Recursos didácticos` salvo en `CSharp.md`, `Atributos.md`, `Atributos-Personalizados.md` y `MSBuild.md`. |
 | `testing/tdd-bdd-sdd` | 3 | Creada el 30/10/2026 directamente en formato nuevo (no es una conversión): `TDD.md`, `BDD.md` y `SDD.md` (544-721 líneas), con el ejemplo conductor del cupón de descuento en C#/.NET. `SDD.md` remite a `ia/ingenieria-con-llms/Desarrollo-Dirigido-por-Especificacion.md` para el flujo con agentes. |
 
 ### Pendiente
@@ -219,17 +220,16 @@ Orden propuesto: por valor de uso y por dependencias entre colecciones. Las pequ
 
 | # | Colección | Fichas | Avisos |
 |---:|---|---:|---|
-| 1 | `lenguajes/csharp-dotnet` (+ 2 subcarpetas) | 8 | Tiene subcarpetas con README propio. |
-| 2 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
-| 3 | `desarrollo-web/asp-net-core` | 9 | |
-| 4 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
-| 5 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
-| 6 | `redes/redes-y-acceso-remoto` | 11 | `SSH.md` y `VPN.md` se cruzan con `despliegue-en-vps`, ya convertida. |
-| 7 | `odoo/fundamentos` | 4 | |
-| 8 | `odoo/busqueda-y-filtros` | 4 | |
-| 9 | `odoo/pruebas-seguras` | 5 | |
-| 10 | `odoo/configuracion-parametros` | 6 | |
-| 11 | `ia/context-engineering` | 9 | Revisar solapamiento con `ia/ingenieria-con-llms`, ya en formato nuevo. |
+| 1 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
+| 2 | `desarrollo-web/asp-net-core` | 9 | |
+| 3 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
+| 4 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
+| 5 | `redes/redes-y-acceso-remoto` | 11 | `SSH.md` y `VPN.md` se cruzan con `despliegue-en-vps`, ya convertida. |
+| 6 | `odoo/fundamentos` | 4 | |
+| 7 | `odoo/busqueda-y-filtros` | 4 | |
+| 8 | `odoo/pruebas-seguras` | 5 | |
+| 9 | `odoo/configuracion-parametros` | 6 | |
+| 10 | `ia/context-engineering` | 9 | Revisar solapamiento con `ia/ingenieria-con-llms`, ya en formato nuevo. |
 
 > `odoo/notificaciones` no está en esta lista: se creó directamente en formato nuevo (no es una conversión), y está incompleta a propósito — le faltan 3 fichas propias, detalladas en su README.
 
