@@ -13,7 +13,7 @@ Cómo separar dominio, casos de uso e infraestructura para que el código sea f�
 Domain-Driven Design (contextos delimitados, objetos de valor, entidades y agregados, repositorios, eventos de dominio), patrones de diseño clásicos (Factory, Strategy, Decorator, Mediator y su implementación MediatR) y el Result Pattern para comunicar fallos esperados como valores.
 
 ### [Multi-Tenancy](multi-tenancy/README.md)
-Cómo una sola aplicación da servicio a muchos clientes (*tenants*) manteniendo sus datos aislados.
+Cómo una sola aplicación da servicio a muchos clientes (*tenants*) manteniendo sus datos aislados: estrategias de aislamiento, identificación del tenant, aislamiento por fila, aprovisionamiento, migraciones y convivencia entre tenants.
 
 ### [Tipos de APIs](tipos-de-apis/README.md)
 Los distintos estilos para construir una API (REST, GraphQL, gRPC, SOAP, WebSockets, webhooks, eventos...) y cuándo elegir cada uno.
