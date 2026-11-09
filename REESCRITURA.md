@@ -177,7 +177,7 @@ Lo que funciona, aprendido en la primera tanda:
 
 ## 7. Estado
 
-**Convertidas: 159 fichas en 24 colecciones. Pendientes: 100 fichas en 10 colecciones.**
+**Convertidas: 163 fichas en 24 colecciones completas (más 4 fichas de `testing/testing-dotnet`, a medias). Pendientes: 96 fichas en 10 colecciones.**
 
 Llevan la sección `Documentación oficial` las 7 de `algoritmos-de-hash` y EF Core, las 10 de `autenticacion-y-autorizacion` (ya completa), las 12 de `devops/ci-cd`, las 19 de `devops/git`, las 9 de `arquitectura-de-software/clean-architecture`, las 11 de `arquitectura-de-software/patrones-de-diseno`, las 13 de `arquitectura-de-software/tipos-de-apis`, las 7 de `arquitectura-de-software/multi-tenancy` y las 8 de `lenguajes/csharp-dotnet`. El resto son anteriores a esa regla y no la tienen (ver la nota de la sección 2: no hay retrofit).
 
@@ -220,7 +220,7 @@ Orden propuesto: por valor de uso y por dependencias entre colecciones. Las pequ
 
 | # | Colección | Fichas | Avisos |
 |---:|---|---:|---|
-| 1 | `testing/testing-dotnet` | 9 | Se cruza con `docker/Testcontainers.md`, ya convertida. |
+| 1 | `testing/testing-dotnet` | 5 de 9 | A medias: el 09/11/2026 se reescribieron `Tipos-de-tests`, `xUnit`, `Shouldly` y `Arrange-Act-Assert` (ejemplo conductor de la tienda; proyecto de pruebas real con xUnit 2.9.3). Pendientes: `Fixtures-y-ciclo-de-vida`, `WebApplicationFactory`, `Testcontainers`, `NSubstitute` y `Coverlet`, y el README-índice. Hallazgos al ejecutar que corrigen las fichas antiguas: un método de test no `public` sí se ejecuta en xUnit; `async void` funciona en xUnit v2 con aviso `xUnit1048` y falla en v3; `dotnet test` con xUnit v3 y SDK 10 exige un `global.json` con `Microsoft.Testing.Platform`; `ShouldBeEquivalentTo` de Shouldly 4.3.0 no ignora el orden; `int` frente a `long` en `ShouldBe` es un error de compilación (CS1929). No hay Docker en la máquina: `Testcontainers.md` no podrá ejecutarse. Se cruza con `docker/Testcontainers.md`, ya convertida. |
 | 2 | `desarrollo-web/asp-net-core` | 9 | |
 | 3 | `desarrollo-web/de-wpf-a-web` | 15 | `Entity-Framework-Core.md` salió de aquí a `bases-de-datos/acceso-a-datos-dotnet` el 28/07/2026; el README la enlaza en su nueva ubicación. |
 | 4 | `desarrollo-web/frontend-react` | 28 | ⚠️ La más grande. La skill citaba su `README.md` como modelo de índice y `clsx.md` como ejemplo; ya no (ver sección 8). |
