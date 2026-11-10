@@ -1,181 +1,210 @@
 # Referencias por ID externo (XML ID)
 
+> Procedencia: código de la rama `19.0` de github.com/odoo/odoo (`odoo/addons/base/models/ir_model.py`, `odoo/orm/environments.py`, `odoo/orm/models.py`, `odoo/tools/convert.py`, `odoo/modules/loading.py`) y documentación 19.0 (referencia de ficheros de datos, referencia del manifiesto, importación y exportación). Leído el 2026-11-10. No se ejecutó ninguna instancia de Odoo: el código no está ejecutado y las únicas «salidas» son textos literales del código fuente. La rama `20.0` existe (su `release.py` indica `20.0 FINAL`); no se contrastó este contenido contra ella.
+
 ## ¿Qué es?
 
-Un **ID externo** (o *XML ID*) es un nombre estable y legible que Odoo asocia a un registro concreto de la base de datos —por ejemplo `base.group_user` para el grupo "Usuario interno", o `project.project_stage_1` para una etapa de proyecto—. Sirve para **crear ese registro desde un módulo y para referirse a él después sin usar su ID numérico**. Por debajo, cada pareja "nombre → registro" se guarda como una fila del modelo `ir.model.data`, con el `id` numérico real del registro y el módulo que lo declaró.
+Un **ID externo** (o *XML ID*) es un nombre estable de la forma `módulo.nombre` que Odoo asocia a un registro concreto de la base de datos: por ejemplo `base.group_user` para el grupo de usuarios internos. Cada pareja «nombre → registro» es una fila del modelo `ir.model.data`, cuyos campos relevantes son (en `ir_model.py`, 19.0):
+
+| Campo | Significado |
+|---|---|
+| `module` | Prefijo: normalmente el módulo que declaró el registro |
+| `name` | Nombre dentro del módulo (sin espacios; hay una restricción SQL) |
+| `model` | Nombre técnico del modelo del registro (`res.partner`, `sale.order`...) |
+| `res_id` | `id` numérico del registro en su tabla |
+| `noupdate` | Si es verdadero, una actualización del módulo no sobrescribe el registro |
+
+Hay un índice único sobre `(module, name)`: un ID externo apunta a un solo registro, aunque un mismo registro puede tener varios IDs externos.
 
 ## ¿Por qué existe?
 
-El ID numérico de un registro (el `id` de la fila en PostgreSQL) **no es fiable entre bases de datos distintas**: la etapa "Hecho" puede ser el `id` 322 en una instalación y el `id` 47 en otra. Si el código dice `if stage_id == 322`, funcionará en un sitio y fallará en silencio en otro —comparará contra un registro que no existe, o contra uno que significa otra cosa—. El ID externo resuelve esto: es un identificador que **se mantiene igual** allá donde esté instalado el módulo, y Odoo se encarga de traducirlo al número que corresponda en cada base de datos.
+El `id` numérico de una fila no es el mismo entre bases de datos: el grupo o la etiqueta que en una base es el `id` 12 puede ser el 87 en otra. Código como `if partner.category_id.id == 12` funciona en una base y falla en silencio en otra. El ID externo es el mismo allí donde esté instalado el módulo, y Odoo lo traduce al número local.
 
-> Es la diferencia entre citar a alguien por su DNI (opaco y distinto en cada país) o por un nombre acordado que todos reconocen. `mi_modulo.stage_done` significa lo mismo en cualquier instalación; `322`, no.
+> Es la diferencia entre identificar a una persona por su número de socio (distinto en cada club) o por su correo corporativo (el mismo en todas partes). `base.group_user` significa lo mismo en cualquier base; `12`, no.
+
+Además, el ID externo permite que una actualización del módulo (`-u`) **encuentre** el registro que instaló antes y lo actualice en vez de crear otro.
 
 ## ¿Cuándo y para qué se usa?
 
-Siempre que el código o una vista necesiten **apuntar a un registro concreto que se comporta como configuración**: un grupo de seguridad, una etapa de un tablero Kanban, un producto especial, un diario contable, una plantilla de correo. En cuanto veas un número mágico comparándose con un `id`, ahí falta un ID externo.
+- Código o vistas que deben apuntar a **un registro concreto que actúa como configuración**: un grupo de seguridad, una etiqueta, una etapa, una plantilla de correo, un diario.
+- Datos que un módulo entrega (ficheros XML/CSV) y que luego debe poder actualizar.
+- Importar y exportar datos entre sistemas, relacionando registros sin depender de los `id` locales.
 
-No lo confundas con un valor configurable suelto (un plazo en días, una URL, un interruptor): eso vive en los [parámetros del sistema](Parametros-del-Sistema.md). El ID externo es para **apuntar a un registro**, no para guardar un dato.
+Un valor suelto (un plazo en días, una URL, un interruptor) no es un registro al que apuntar: eso vive en los [parámetros del sistema](Parametros-del-Sistema.md). Otras vías de configuración, que no son IDs externos: [el fichero `odoo.conf`](El-Fichero-odoo-conf.md), [los ajustes](Ajustes.md), [la configuración por compañía](Configuracion-por-Compania.md) y [los valores por defecto](Valores-por-Defecto.md).
 
 ## Resolver un ID externo desde Python
 
-La función que vas a usar casi siempre es `env.ref`, que busca la pareja `(módulo, nombre)` en `ir.model.data` y devuelve el registro real de esta base de datos:
+`env.ref` busca `(módulo, nombre)` en `ir.model.data` y devuelve el recordset del registro (firma en `odoo/orm/environments.py`, 19.0):
 
 ```python
 grupo = self.env.ref("base.group_user")
-etapa_hecho = self.env.ref("mi_modulo.stage_done")
+etiqueta = self.env.ref("mi_modulo.categoria_cafeterias")
 
-if tarea.stage_id == etapa_hecho:
-    tarea.message_post(body="Tarea completada")
-```
-
-Dos matices que conviene saber antes de usarla en serio:
-
-- **No crea el registro, solo lo busca.** Si `mi_modulo.stage_done` no existe todavía en esta base de datos, `env.ref` no lo inventa: lanza `ValueError`. El registro tiene que venir ya declarado en un fichero de datos del módulo (siguiente sección) o haberse creado antes por otra vía.
-- **Para tolerar que no exista**, pásale `raise_if_not_found=False`: devuelve `False` en lugar de lanzar el error, útil cuando el registro es opcional o viene de un módulo que podría no estar instalado.
-
-```python
-etapa_opcional = self.env.ref("otro_modulo.stage_revision", raise_if_not_found=False)
-if etapa_opcional:
+if etiqueta in partner.category_id:
     ...
 ```
 
-## Definir y enlazar datos de módulo en XML
+Comportamiento, leído en el código:
 
-Un ID externo no aparece solo: alguien lo declara. La forma habitual es un **fichero de datos** del módulo, listado en la clave `data` del `__manifest__.py`, con un `<record>` por registro. El `id` que le pones **es** su ID externo:
+- **Solo busca, no crea.** El docstring lo dice: lanza `ValueError` si el registro no se encuentra y `raise_if_not_found` es `True` (valor por defecto).
+- **Dos mensajes distintos.** Si la fila de `ir.model.data` no existe, el mensaje es `External ID not found in the system: <xmlid>` (en `_xmlid_lookup`). Si la fila existe pero el registro al que apunta fue borrado, el mensaje es `No record found for unique ID <xmlid>. It may have been deleted.`
+- **Con `raise_if_not_found=False`** devuelve `None` en ambos casos (el tipo de retorno anotado es `BaseModel | None`).
+- El ID debe llevar el módulo: `_xmlid_lookup` hace `xmlid.split('.', 1)`, así que un nombre sin punto falla.
+
+```python
+etiqueta = self.env.ref("otro_modulo.categoria_opcional", raise_if_not_found=False)
+if etiqueta:
+    ...
+```
+
+Para saber a qué modelo y `id` apunta un ID externo sin traer el registro, existe `self.env["ir.model.data"]._xmlid_to_res_model_res_id("mod.nombre")`; devuelve `(modelo, res_id)` o `(False, False)` (método con prefijo `_`, de uso interno).
+
+### El camino inverso: de un registro a su ID externo
+
+`get_external_id()` (en `odoo/orm/models.py`, 19.0) devuelve un diccionario `{id: 'módulo.nombre'}`, con cadena vacía si el registro no tiene ID externo. Si tiene varios, devuelve solo uno de ellos (el docstring dice «randomly»). `_get_external_ids()` devuelve la lista completa por registro.
+
+```python
+partner.get_external_id()
+# forma documentada en el docstring: {id: 'module.ext_id'}, o {id: ''} si no hay
+```
+
+## Declarar registros en ficheros XML
+
+Un ID externo lo declara alguien. La vía habitual es un fichero de datos listado en la clave `data` del `__manifest__.py`, con un `<record>` por registro. El atributo `id` es el ID externo; `model` el modelo:
 
 ```xml
-<!-- data/project_task_type_data.xml -->
 <odoo>
     <data noupdate="1">
-        <record id="stage_done" model="project.task.type">
-            <field name="name">Hecho</field>
-            <field name="sequence">40</field>
+        <record id="categoria_cafeterias" model="res.partner.category">
+            <field name="name">Cafeterías</field>
         </record>
     </data>
 </odoo>
 ```
 
-Desde otro módulo, o desde Python, ese registro se referencia como `mi_modulo.stage_done` (siempre `<módulo>.<id>`, salvo que se declare explícitamente con un prefijo distinto). Para enlazarlo dentro de **otro** XML se usa el atributo `ref`, o la función `ref()` dentro de un `eval`:
+Si `id` no lleva punto, `make_xml_id` (en `convert.py`) le antepone el módulo actual: este registro queda como `mi_modulo.categoria_cafeterias`. Si lleva punto, el ID debe tener **un solo punto** (`módulo.id`) y, si el módulo es otro, ese módulo debe estar instalado (`_test_xml_id` falla con *«refers to an uninstalled module»*).
+
+La documentación (referencia de ficheros de datos, 19.0) añade: los ficheros se ejecutan en orden y una operación solo puede referirse al resultado de operaciones anteriores; y se recomienda encarecidamente dar `id` a todo `<record>`.
+
+### Referirse a un registro dentro de otro XML
+
+Con el atributo `ref` de un `<field>`, o con la función `ref()` dentro de `eval` (ambos aparecen en la referencia de datos):
 
 ```xml
-<record id="regla_solo_lectura" model="ir.rule">
-    <field name="name">Solo lectura para usuarios</field>
-    <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+<record id="partner_cafes_del_valle" model="res.partner">
+    <field name="name">Cafés del Valle</field>
+    <field name="category_id" eval="[(4, ref('mi_modulo.categoria_cafeterias'))]"/>
 </record>
 ```
 
-El atributo `noupdate="1"` (a nivel de `<data>` o de un `<record>` suelto) le dice a Odoo: *aplica estos valores cuando el módulo se instala, pero no los toques en actualizaciones posteriores*. Sin él, cada `-u` de tu módulo revertiría cualquier cambio que un usuario hubiera hecho a mano sobre ese registro (renombrar la etapa, cambiar su color, reordenarla). Se usa casi siempre para datos que nacen como plantilla pero luego son del negocio.
+Qué hace: crea el contacto y le añade (comando `4`, enlazar) la etiqueta cuyo ID externo es `mi_modulo.categoria_cafeterias`. Para un campo Many2one basta `<field name="parent_id" ref="mod.id"/>`.
 
-Para encontrar el ID externo de un registro que ya tienes delante en la interfaz, con el modo desarrollador activo abre su formulario y ve a *menú de desarrollador → Ver metadatos* (*View Metadata*): ahí aparece su *External ID*, o el aviso de que no tiene ninguno.
+## `noupdate`: qué recarga `-u` y qué no
 
-## Adoptar bajo un módulo un registro que ya existía
+La referencia de datos (19.0) lo describe así: lo que está en `<data noupdate="1">` solo se carga al instalar el módulo (`-i`); lo demás se recarga en instalación **y** en actualización (`-i`/`-u`).
 
-Aquí aparece el caso incómodo: una etapa de tarea que alguien creó **a mano desde la interfaz**, mucho antes de que existiera tu módulo. Ese registro no tiene ninguna fila en `ir.model.data` — no lo declaró ningún XML, así que Odoo no sabe que corresponde a ningún ID externo.
+Lo que hace el código (`convert.py`, `_tag_record`, 19.0): en modo actualización, si el nodo está marcado `noupdate` y el ID ya existe, el registro **no se actualiza** (solo se guarda su `id` para poder referenciarlo después). Si no existe, se crea con normalidad salvo que lleve `forcecreate="0"`. Además, `models.py` (`_load_records`) vuelve a comprobar el campo `noupdate` de la fila de `ir.model.data` (`if not (update and d_noupdate)`), de modo que el indicador persiste en la base y no solo en el XML.
 
-Si simplemente añades el `<record id="stage_done" model="project.task.type">` de la sección anterior a tu módulo y lo instalas, Odoo **no reconoce** que ya existe una etapa "Hecho": busca `(mi_modulo, stage_done)` en `ir.model.data`, no encuentra nada, y crea una etapa **nueva**. El resultado es una etapa duplicada, con las tareas antiguas apuntando todavía a la de siempre y las nuevas cayendo en la recién creada.
+| Situación | ¿`-u` pisa los cambios hechos a mano? |
+|---|---|
+| `<record>` fuera de `noupdate` | Sí: vuelve a escribir los campos del XML |
+| `<record>` en `<data noupdate="1">`, ya instalado | No |
+| `<record>` en `noupdate`, y el registro fue borrado a mano | Se vuelve a crear en la actualización (sale del código: «else create it normally») |
 
-La solución es **crear tú mismo, de antemano, la fila de `ir.model.data`** que le falta al registro existente, apuntando al `id` numérico que ya tiene. En cuanto esa fila existe, Odoo trata el registro como si ya fuera "suyo": cuando llegue el `<record id="stage_done">`, en vez de crear uno nuevo **actualiza el que ya hay**.
+Un registro de configuración que el negocio personalizará (etiquetas, etapas, plantillas) va en `noupdate`; uno que debe mantenerse idéntico al del módulo, no.
+
+## Por qué no clavar IDs numéricos
+
+❌ Depende de la base:
 
 ```python
-def _adopt_existing_stage(env, module, xml_id, stage_name):
-    """Vincula una etapa creada a mano a un ID externo del módulo, sin duplicarla."""
-    IrModelData = env["ir.model.data"]
+if partner.category_id.id == 12:   # en otra base el 12 es otra cosa o no existe
+    ...
+```
 
-    ya_adoptada = IrModelData.search_count([
-        ("module", "=", module),
-        ("name", "=", xml_id),
-    ])
-    if ya_adoptada:
-        return  # una ejecución anterior ya hizo este trabajo
+✅ Depende de un nombre acordado:
 
-    etapa = env["project.task.type"].search([("name", "=", stage_name)], limit=1)
-    if etapa:
-        IrModelData.create({
-            "module": module,
-            "name": xml_id,
-            "model": "project.task.type",
-            "res_id": etapa.id,
+```python
+if self.env.ref("mi_modulo.categoria_cafeterias") in partner.category_id:
+    ...
+```
+
+Tampoco conviene buscar por nombre visible (`search([("name", "=", "Cafeterías")])`): el nombre puede traducirse o renombrarse.
+
+## IDs externos en exportación e importación
+
+La documentación de importación y exportación (19.0) explica que:
+
+- En la exportación, el campo `ID` (o `XXX/ID` para una relación) lleva el ID externo, y distingue «ID de base de datos» de «ID externo».
+- En la importación, la columna `ID` fija el ID externo del registro importado y las columnas de relaciones se escriben `XXX/ID` (por ejemplo `Country/External ID`, con valores como `base.be`). Se desaconseja quitar la columna `ID` de un fichero exportado.
+- Dos registros con el mismo ID externo provocan conflicto.
+
+En el código, si se exporta un registro sin ID externo, `__ensure_xml_id` (`models.py`) **crea uno** con el módulo `__export__`. Por eso un registro exportado puede adquirir un ID externo `__export__.xxx` sin que nadie lo declare en un módulo.
+
+## Adoptar un registro creado a mano sin duplicarlo
+
+Caso: la etiqueta «Cafeterías» la creó alguien desde la interfaz, antes de que existiera el módulo. No tiene fila en `ir.model.data`. Si el módulo añade el `<record id="categoria_cafeterias" ...>` anterior, el cargador busca `(mi_modulo, categoria_cafeterias)`, no lo encuentra y **crea otra etiqueta**.
+
+El código de `_load_records` consulta las filas existentes (`_lookup_xmlids`) y, si hay una para ese ID, actualiza el registro al que apunta (`res_id`). De ahí el patrón: crear de antemano la fila de `ir.model.data` apuntando al registro existente. Los campos son los de la tabla de arriba:
+
+```python
+def _adoptar_categoria(env):
+    imd = env["ir.model.data"]
+    if imd.search_count([("module", "=", "mi_modulo"), ("name", "=", "categoria_cafeterias")]):
+        return  # ya adoptada
+    categoria = env["res.partner.category"].search([("name", "=", "Cafeterías")], limit=1)
+    if categoria:
+        imd.create({
+            "module": "mi_modulo",
+            "name": "categoria_cafeterias",
+            "model": "res.partner.category",
+            "res_id": categoria.id,
             "noupdate": True,
         })
 ```
 
-Buscar por nombre (`stage_name`) es exactamente lo que se desaconseja como forma habitual de referenciar un registro (ver más abajo) — pero aquí es distinto: este código no se ejecuta en cada petición, sino **una sola vez**, en un momento controlado, con el único propósito de tender el puente hacia el ID externo. A partir de ahí, todo el resto del módulo usa `env.ref("mi_modulo.stage_done")` con normalidad.
+No ejecutado. El patrón es una deducción a partir de la lectura de `_load_records` y de los campos de `ir.model.data`; la documentación oficial leída no describe este procedimiento. Dos precauciones: buscar por nombre solo es aceptable aquí, en un paso puntual; y buscar `env.ref(...)` para decidir si hay que crear la etiqueta es un error, porque ese ID aún no existe y se crearía un duplicado.
 
-### Un antipatrón fácil de escribir por error
+### Cuándo se ejecuta ese código
 
-La lógica anterior se confunde a menudo con esta otra, que parece razonable y no lo es:
+Leído en `odoo/modules/loading.py` (19.0) y en la referencia del manifiesto:
 
-```python
-def _adopt_existing_stage_MAL(env, module, xml_id, stage_name):
-    etapa = env.ref(f"{module}.{xml_id}", raise_if_not_found=False)
-    if not etapa:
-        env["project.task.type"].create({"name": stage_name})
-```
+| Mecanismo | Cuándo corre |
+|---|---|
+| `pre_init_hook` (clave del manifiesto) | Solo en **instalación**, antes de cargar el módulo y sus datos; recibe `env` |
+| `post_init_hook` | Solo en instalación, después de cargar el módulo; recibe `env` |
+| `uninstall_hook` | En la desinstalación; recibe `env` |
+| `migrations/<versión>/pre-*`, `post-*`, `end-*` | En una **actualización** (`migrate_module(package, 'pre'/'post'/'end')`), no en la instalación inicial |
 
-La pregunta que hace este código es "¿ya existe un registro con este ID externo?", y si la
-respuesta es no, **crea uno nuevo**. El problema es que, en el caso que nos ocupa, esa pregunta
-siempre responde que no —el ID externo nunca ha existido, es precisamente lo que falta crear—,
-así que esta función crea una etapa "Hecho" nueva cada vez que se ejecuta, sin tocar nunca la
-etapa real que las tareas ya llevan usando. Y como tampoco registra el ID externo del registro
-que acaba de crear, ni siquiera es idempotente: una segunda ejecución crea una tercera etapa
-"Hecho".
+La referencia del manifiesto indica que los hooks solo se deben usar cuando la preparación o limpieza sea muy difícil o imposible por la API normal. Para un módulo ya instalado en producción, el código de adopción debe ir en un script de migración; para una instalación nueva, en `pre_init_hook`. No se leyó la firma exacta de los scripts de migración (`migrate(cr, version)` es el uso habitual, no verificado aquí).
 
-La pregunta correcta no es "¿existe ya el puente?" sino "¿existe ya el registro que quiero
-adoptar?" — por eso la versión de arriba busca la etapa **por nombre**, no por su (inexistente)
-ID externo, y es ella la que decide si hay que crear la fila de `ir.model.data` o no.
+## Errores frecuentes
 
-## Hooks de instalación y migraciones de actualización
-
-Falta decidir **cuándo** se ejecuta ese código de adopción, y la respuesta depende de si el módulo es nuevo o ya estaba instalado:
-
-| Mecanismo | Cuándo se ejecuta | Para qué sirve |
-|---|---|---|
-| `pre_init_hook` | Antes de cargar los datos del módulo, solo en su **instalación** | Preparar el terreno antes de que se procesen los ficheros XML —el sitio para la adopción de registros existentes— |
-| `post_init_hook` | Después de cargar todos los datos, solo en su **instalación** | Trabajo que necesita que los datos del módulo ya existan (crear registros derivados, lanzar un cálculo inicial) |
-| `uninstall_hook` | Al **desinstalar** el módulo | Limpiar lo que el módulo dejó fuera de su propio control de datos (parámetros de sistema, ficheros externos) |
-| `migrations/<versión>/pre-migrate.py`, `post-migrate.py`, `end-migrate.py` | En una **actualización** (`-u`) de un módulo que ya estaba instalado, cuando el número de versión del `__manifest__.py` sube | El equivalente de los tres hooks anteriores pero para módulos que no se instalan de cero |
-
-El matiz importante: `pre_init_hook` y `post_init_hook` **solo se disparan la primera vez que el módulo se instala**. Si el módulo lleva meses en producción y publicas una nueva versión con el código de adopción, esa instalación no vuelve a ocurrir — lo que corre es una actualización, y ahí lo que Odoo ejecuta son los scripts de `migrations/`. Se registran por carpeta con el número de versión al que pertenecen y una función `migrate(cr, version)`:
-
-```python
-# migrations/18.0.1.1.0/pre-migrate.py
-from odoo import api, SUPERUSER_ID
-
-
-def migrate(cr, version):
-    env = api.Environment(cr, SUPERUSER_ID, {})
-    _adopt_existing_stage(env, "mi_modulo", "stage_done", "Hecho")
-```
-
-Para una instalación nueva, el mismo código se registra como hook normal en el manifest:
-
-```python
-{
-    "name": "Mi módulo",
-    ...
-    "pre_init_hook": "_adopt_existing_stage_on_install",
-}
-```
-
-con la función expuesta desde el `__init__.py` del módulo. Desde Odoo 17 la firma de los hooks recibe directamente un entorno (`def post_init_hook(env):`); en versiones anteriores recibía `(cr, registry)` y había que construirse el entorno a mano con `api.Environment(cr, SUPERUSER_ID, {})`, como en el ejemplo de migración de arriba.
+| Síntoma | Causa |
+|---|---|
+| `ValueError: External ID not found in the system: mod.nombre` | La fila no existe: módulo no instalado, nombre mal escrito, o el registro nunca se declaró |
+| `ValueError: No record found for unique ID ... It may have been deleted.` | La fila existe pero el registro fue borrado |
+| Tras instalar el módulo aparece un registro duplicado | El registro ya existía a mano y no tenía fila en `ir.model.data` (ver adopción) |
+| Un `-u` no devuelve un registro a sus valores originales | El registro está en `noupdate` o su fila tiene `noupdate` verdadero |
+| `The ID "x.y" refers to an uninstalled module` al cargar el XML | El ID referencia un módulo que no está instalado ni es dependencia |
+| `The ID reference ... must contain maximum one dot` | El `id` del XML lleva más de un punto |
+| Un ID externo deja de existir tras desinstalar un módulo | `_module_data_uninstall` borra los registros referenciados por las filas del módulo, siempre que ninguna otra fila de otro módulo los referencie |
 
 ## Buenas prácticas avanzadas
 
-- **Nunca compares contra IDs numéricos clavados en el código.** Un `STAGE_DONE_ID = 322` esparcido por varios ficheros es una bomba de relojería: el día que el módulo se instala en otra base de datos, ese número apunta a otra cosa o a nada. Sustitúyelo por `self.env.ref("mi_modulo.stage_done")` y el problema desaparece de raíz.
-- **`env.ref` frente a `search` por nombre, para el uso cotidiano del código.** Buscar un registro por su nombre (`search([("name", "=", "Hecho")])`) es frágil: basta con que alguien lo renombre o lo traduzca para romperlo. El ID externo es inmune a eso, así que es la referencia preferida para configuración — la búsqueda por nombre solo se justifica como paso puntual de migración, nunca como mecanismo habitual.
-- **Adoptar un registro le ata su ciclo de vida al módulo.** Una vez que una etapa creada a mano tiene una fila en `ir.model.data` de tu módulo, desinstalarlo hará que Odoo intente borrarla junto con el resto de sus datos —aunque esa etapa existiera mucho antes que el módulo—. Si otro módulo o muchas tareas siguen apuntando a ella, la desinstalación puede fallar o arrastrar más de lo que esperabas. Revisa las dependencias antes de desinstalar un módulo que adoptó datos preexistentes.
-- **`noupdate="1"` (o `noupdate=True` al crear la fila a mano) protege del pisoteo, no del borrado.** Evita que una actualización del módulo sobrescriba los valores que el negocio cambió a mano, pero no impide que una desinstalación borre el registro, ni que el propio módulo lo modifique explícitamente por código en tiempo de ejecución.
-- **Prefija con el módulo y usa nombres con significado.** `mi_modulo.stage_done` se entiende de un vistazo; un ID externo genérico o sin prefijo invita a colisiones con el de otro módulo y a confusión sobre quién es el dueño del dato.
+- **El ciclo de vida de un registro adoptado queda atado al módulo.** `_module_data_uninstall` elimina los registros cuyas filas de `ir.model.data` pertenecen al módulo (salvo los que otra fila mantiene vivos). Al adoptar un registro anterior al módulo, valora si desinstalarlo debería borrarlo.
+- **`noupdate` protege de `-u`, no de la desinstalación ni del código.** Un registro `noupdate` se borra igualmente al desinstalar su módulo.
+- **Cuando un módulo consume un ID de otro, decláralo en `depends`**, o usa `raise_if_not_found=False`: `_test_xml_id` rechaza referencias en XML a módulos no instalados.
+- **No dependas de un ID `__export__`.** Se genera al exportar un registro sin ID; no pertenece a ningún módulo ni es estable entre bases.
+- **Nombra con sentido y sin duplicar prefijos.** `mi_modulo.categoria_cafeterias` se lee solo; un nombre genérico invita a colisiones y a no saber quién es el dueño.
+- **`get_external_id()` no es determinista si hay varios IDs.** Si necesitas todos, usa `_get_external_ids()` (método interno).
 
 ## Documentación oficial
 
-- [Ficheros de datos e IDs externos](https://www.odoo.com/documentation/18.0/developer/reference/backend/data.html) — la referencia de `<record>`, `noupdate`, `ref` y `eval` dentro de un fichero de datos.
-- [Manifiesto del módulo](https://www.odoo.com/documentation/18.0/developer/reference/backend/module.html) — dónde se documentan las claves `pre_init_hook`, `post_init_hook` y `uninstall_hook` del `__manifest__.py`.
-
-## Recursos didácticos
-
-- [openupgradelib](https://github.com/OCA/openupgradelib) — la librería que usa la comunidad OCA para migrar bases de datos entre versiones de Odoo trae, entre sus utilidades, funciones como `add_xmlid` que hacen exactamente la adopción de esta ficha (crear la fila de `ir.model.data` que le falta a un registro existente). Ver su código es la forma más rápida de comprobar que el patrón manual de arriba es el mismo que usa la comunidad.
+- [Ficheros de datos](https://www.odoo.com/documentation/19.0/developer/reference/backend/data.html) — `<record>`, `ref`, `eval`, `noupdate` y `forcecreate`.
+- [Manifiesto del módulo](https://www.odoo.com/documentation/19.0/developer/reference/backend/module.html) — `pre_init_hook`, `post_init_hook` y `uninstall_hook`.
+- [Exportar e importar datos](https://www.odoo.com/documentation/19.0/applications/essentials/export_import_data.html) — ID de base de datos frente a ID externo, columnas `ID` y `XXX/ID`.
 
 ---
 
-*En resumen: el ID externo es el nombre estable de un registro —defínelo con `<record id="...">`, resuélvelo con `env.ref("modulo.nombre")` en vez de IDs numéricos clavados, y si el registro ya existía a mano, tiéndele el puente creando su fila de `ir.model.data` antes de que el módulo intente declararlo, para que lo actualice en vez de duplicarlo.*
+*En resumen: un ID externo es la fila de `ir.model.data` que da a un registro un nombre `módulo.nombre` estable entre bases; se declara con `<record id="...">`, se resuelve con `env.ref(...)` en vez de IDs numéricos, `noupdate` decide si `-u` lo vuelve a escribir, y un registro creado a mano se adopta creando su fila de `ir.model.data` antes de que el módulo lo declare.*
